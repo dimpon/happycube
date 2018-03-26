@@ -25,4 +25,4 @@ The program does not check whether solution is unique, but I have some thoughts 
 
 ##### The input params for running program:
 
-java  -jar ./target/happycube-spring-boot.jar "dir with input data" "prefix for input files" "extention of input files" "solutions dir" "solutions files prefix" "solutions files extension" "need to stop after first solution finding true/false" 
+java  -jar ./target/happycube-spring-boot.jar "dir with input data" "prefix for input files" "extention of input files" "solutions dir" "solutions files prefix" "solutions files extension" "need to stop after first solution is found true/false" 
