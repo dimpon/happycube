@@ -1,4 +1,4 @@
-# Happy Cude solution finder
+# Happy Cube solution finder
 
 #### Common Information
 It is a program for finding puzzle solution.
