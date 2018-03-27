@@ -5,11 +5,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.dimpon.happycube.utils.Data3d.*;
 import static com.dimpon.happycube.utils.Data3dRealPlanes.*;
 
+import static com.dimpon.happycube.utils.Matrix3dUtils.paintMatrix;
 import static com.dimpon.happycube.utils.MatrixUtils.MATRIX_SIZE;
 
 @Slf4j
@@ -86,7 +88,54 @@ public class Matrix3dUtilsTest {
 
     }
 
-    private void printTheCube(int[][][] cube) {
+    @Test
+    public void testPaintMatrix() throws Exception {
+
+        //Arrange
+        int[][] matrix = new int[][]{
+                {0, 1, 0, 1, 0},
+                {0, 1, 1, 1, 0},
+                {1, 1, 1, 1, 1},
+                {0, 1, 1, 1, 0},
+                {0, 0, 1, 0, 0}
+        };
+
+        int[][] expectedResult = new int[][]{
+                {0, 3, 0, 3, 0},
+                {0, 3, 3, 3, 0},
+                {3, 3, 3, 3, 3},
+                {0, 3, 3, 3, 0},
+                {0, 0, 3, 0, 0}
+        };
+
+        //Act
+        paintMatrix(matrix, 3);
+
+        //Assert
+        Assert.assertTrue(Arrays.deepEquals(expectedResult,matrix));
+
+    }
+
+    @Test
+    public void testFoldColoredCube() throws Exception {
+
+        List<int[][]> unfolded = new ArrayList<>(6);
+        unfolded.add(leftPlaneReal);
+        unfolded.add(topPlaneReal);
+        unfolded.add(rightPlaneReal);
+
+        unfolded.add(frontPlaneReal);
+        unfolded.add(bottomPlaneReal);
+        unfolded.add(backPlaneReal);
+
+
+        int[][][] out = Matrix3dUtils.foldColoredCube(unfolded);
+
+        //todo need to make test model of folded colored cube
+
+    }
+
+        private void printTheCube(int[][][] cube) {
 
         for (int z = 0; z < MATRIX_SIZE; z++) {
             for (int y = 0; y < MATRIX_SIZE; y++) {
