@@ -131,6 +131,8 @@ public class Matrix3dUtilsTest {
 
         int[][][] out = Matrix3dUtils.foldColoredCube(unfolded);
 
+        log.info(Arrays.deepToString(out));
+
         //todo need to make test model of folded colored cube
 
     }
