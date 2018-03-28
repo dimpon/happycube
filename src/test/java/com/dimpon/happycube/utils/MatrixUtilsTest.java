@@ -4,8 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import static com.dimpon.happycube.utils.Data3dRealPlanes.*;
+import static com.dimpon.happycube.utils.Data3dRealPlanes.backPlaneReal;
+import static com.dimpon.happycube.utils.Data3dRealPlanes.bottomPlaneReal;
 import static com.dimpon.happycube.utils.MatrixUtils.*;
 
 @Slf4j
@@ -229,8 +234,25 @@ public class MatrixUtilsTest {
 
     }
 
+    @Test
+    public void testIsCubePerfect() throws Exception {
+
+        List<int[][]> unfolded = new ArrayList<>(6);
+        unfolded.add(leftPlaneReal);
+        unfolded.add(topPlaneReal);
+        unfolded.add(rightPlaneReal);
+
+        unfolded.add(frontPlaneReal);
+        unfolded.add(bottomPlaneReal);
+        unfolded.add(backPlaneReal);
+
+        boolean cubePerfect = MatrixUtils.isCubePerfect(unfolded);
+
+        Assert.assertTrue(cubePerfect);
+    }
 
 
 
 
-}
+
+    }

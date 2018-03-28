@@ -4,9 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static com.dimpon.happycube.utils.MatrixUtils.MATRIX_SIZE;
 
@@ -104,29 +102,33 @@ public class Matrix3dUtils {
      * @param unfolded unfolded plane layout
      * @return cube in 3d array
      */
-    public static int[][][] foldColoredCube(List<int[][]> unfolded) {
-        int color = 1;
-        for (int[][] matrix : unfolded) {
-            paintMatrix(matrix, color);
-            color++;
+    public static int[][][] foldColoredCube(List<int[][]> unfolded, int[] colors) {
+        List<int[][]> res = new ArrayList<>(6);
+        for (int i = 0; i < unfolded.size(); i++) {
+            int[][] matrix = unfolded.get(i);
+            res.add(paintMatrix(matrix, colors[i]));
         }
 
-        return foldTheCube(unfolded);
+        return foldTheCube(res);
     }
 
     /**
-     * Replaces all 1 to color (int). Method does not create the new array, it changes initial!
+     * Replaces all 1 to color (int).
      *
      * @param matrix initial matrix
      * @param color  int number, imitate color
      * @return "colored matrix"
      */
-    public static void paintMatrix(int[][] matrix, int color) {
+    public static int[][] paintMatrix(int[][] matrix, int color) {
+        @SuppressWarnings("unchecked")
+        int[][] out = (int[][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE);
+
         for (int i = 0; i < MATRIX_SIZE; i++) {
             for (int j = 0; j < MATRIX_SIZE; j++) {
-                matrix[i][j] = matrix[i][j] * color;
+                out[i][j] = matrix[i][j] * color;
             }
         }
+        return out;
     }
 
 

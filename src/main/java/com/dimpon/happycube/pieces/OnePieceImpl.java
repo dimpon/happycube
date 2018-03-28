@@ -18,6 +18,12 @@ public class OnePieceImpl implements OnePiece {
      */
     private Map<Integer, int[][]> positions = new HashMap<>();
 
+    /**
+     * The map contains the int representation of edges of position of piece.
+     * It is used for fast calculation whether the edges intersect correctly, without gaps and overlaps
+     */
+    private Map<Integer,Map<Edge,Integer>> magicNumbersOfEdges = new HashMap<>();
+
 
     public OnePieceImpl(int order) {
         this.order = order;
