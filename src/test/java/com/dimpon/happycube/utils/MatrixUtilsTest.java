@@ -1,5 +1,7 @@
 package com.dimpon.happycube.utils;
 
+import com.dimpon.happycube.pieces.OnePiece;
+import com.dimpon.happycube.pieces.OnePieceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,6 +9,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.dimpon.happycube.utils.Data3dRealPlanes.*;
 import static com.dimpon.happycube.utils.Data3dRealPlanes.backPlaneReal;
@@ -36,7 +39,7 @@ public class MatrixUtilsTest {
                 {1, 2, 3, 4, 5}
         };
 
-        int[][] copy = Arrays.copyOf(in,in.length);
+        int[][] copy = Arrays.copyOf(in, in.length);
 
         //Act
         int[][] out = MatrixUtils.rotateToRight(in);
@@ -44,7 +47,7 @@ public class MatrixUtilsTest {
         //Assert
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(expectedResult, out));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(expectedResult, out));
-        Assert.assertTrue(Arrays.deepEquals(copy,in));//check that initial matrix wasn't changed
+        Assert.assertTrue(Arrays.deepEquals(copy, in));//check that initial matrix wasn't changed
     }
 
     @Test
@@ -59,7 +62,7 @@ public class MatrixUtilsTest {
                 {1, 0, 0, 1, 1}
         };
 
-        int[][] copy = Arrays.copyOf(in,in.length);
+        int[][] copy = Arrays.copyOf(in, in.length);
 
         //Act
         int[][] out = MatrixUtils.rotateToLeft(in);
@@ -67,7 +70,7 @@ public class MatrixUtilsTest {
         //Assert
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(expectedResult, out));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(expectedResult, out));
-        Assert.assertTrue(Arrays.deepEquals(copy,in));
+        Assert.assertTrue(Arrays.deepEquals(copy, in));
     }
 
     @Test
@@ -82,7 +85,7 @@ public class MatrixUtilsTest {
                 {5, 4, 3, 2, 1}
         };
 
-        int[][] copy = Arrays.copyOf(in,in.length);
+        int[][] copy = Arrays.copyOf(in, in.length);
 
         //Act
         int[][] out = MatrixUtils.rotate2times(in);
@@ -90,7 +93,7 @@ public class MatrixUtilsTest {
         //Assert
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(expectedResult, out));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(expectedResult, out));
-        Assert.assertTrue(Arrays.deepEquals(copy,in));
+        Assert.assertTrue(Arrays.deepEquals(copy, in));
     }
 
     @Test
@@ -105,7 +108,7 @@ public class MatrixUtilsTest {
                 {1, 0, 0, 1, 1}
         };
 
-        int[][] copy = Arrays.copyOf(in,in.length);
+        int[][] copy = Arrays.copyOf(in, in.length);
 
         //Act
         int[][] out = MatrixUtils.mirror(in);
@@ -113,7 +116,7 @@ public class MatrixUtilsTest {
         //Assert
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(expectedResult, out));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(expectedResult, out));
-        Assert.assertTrue(Arrays.deepEquals(copy,in));
+        Assert.assertTrue(Arrays.deepEquals(copy, in));
     }
 
     @Test
@@ -234,25 +237,107 @@ public class MatrixUtilsTest {
 
     }
 
+
+
     @Test
-    public void testIsCubePerfect() throws Exception {
+    public void testCheckOneEdge() throws Exception {
 
-        List<int[][]> unfolded = new ArrayList<>(6);
-        unfolded.add(leftPlaneReal);
-        unfolded.add(topPlaneReal);
-        unfolded.add(rightPlaneReal);
+        Assert.assertTrue(MatrixUtils
+                .checkOneEdge(
+                        0b10000,
+                        0b01010,
+                        0b00100,
+                        0b00001));
 
-        unfolded.add(frontPlaneReal);
-        unfolded.add(bottomPlaneReal);
-        unfolded.add(backPlaneReal);
+        Assert.assertTrue(MatrixUtils
+                .checkOneEdge(
+                        0b11111,
+                        0b01010,
+                        0b00100,
+                        0b11111));
 
-        boolean cubePerfect = MatrixUtils.isCubePerfect(unfolded);
+        Assert.assertTrue(MatrixUtils
+                .checkOneEdge(
+                        0b00100,
+                        0b01000,
+                        0b10110,
+                        0b00001));
 
-        Assert.assertTrue(cubePerfect);
+
+        Assert.assertTrue(MatrixUtils
+                .checkOneEdge(
+                        0b00100,
+                        0b01010,
+                        0b10100,
+                        0b11011));
+
+    }
+
+    @Test
+    public void testCalculateEdgesMagicNumbers() throws Exception {
+
+        int[][] plane = new int[][]{
+                {0, 0, 1, 0, 1},
+                {1, 1, 1, 1, 1},
+                {0, 1, 1, 1, 0},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 0, 1}
+        };
+
+        OnePiece p1 = new OnePieceImpl(0);
+        p1.populate(plane);
+
+        Map<Edge, Integer> mn = p1.getEdgeMagicNumbers(10);
+
+        Assert.assertEquals(new Integer(5), mn.get(Edge.TOP));
+        Assert.assertEquals(new Integer(20), mn.get(Edge.TOP_REVERSE));
+
+        Assert.assertEquals(new Integer(11), mn.get(Edge.LEFT));
+        Assert.assertEquals(new Integer(26), mn.get(Edge.LEFT_REVERSE));
+
+        Assert.assertEquals(new Integer(27), mn.get(Edge.RIGHT));
+        Assert.assertEquals(new Integer(27), mn.get(Edge.RIGHT_REVERSE));
+
+        Assert.assertEquals(new Integer(29), mn.get(Edge.BOTTOM));
+        Assert.assertEquals(new Integer(23), mn.get(Edge.BOTTOM_REVERSE));
+
+    }
+
+    @Test
+    public void testIsCubePerfectUsingEdges() throws Exception {
+
+        OnePiece p0 = new OnePieceImpl(0);
+        p0.populate(leftPlaneReal);
+
+        OnePiece p1 = new OnePieceImpl(1);
+        p1.populate(topPlaneReal);
+
+        OnePiece p2 = new OnePieceImpl(2);
+        p2.populate(rightPlaneReal);
+
+        OnePiece p3 = new OnePieceImpl(3);
+        p3.populate(frontPlaneReal);
+
+        OnePiece p4 = new OnePieceImpl(4);
+        p4.populate(bottomPlaneReal);
+
+        OnePiece p5 = new OnePieceImpl(5);
+        p5.populate(backPlaneReal);
+
+
+        List<Map<Edge, Integer>> input = new ArrayList<>(6);
+        input.add(p0.getEdgeMagicNumbers(10));
+        input.add(p1.getEdgeMagicNumbers(20));
+        input.add(p2.getEdgeMagicNumbers(30));
+        input.add(p3.getEdgeMagicNumbers(40));
+        input.add(p4.getEdgeMagicNumbers(50));
+        input.add(p5.getEdgeMagicNumbers(60));
+
+
+        boolean b = PerfectCubeChecker.isCubePerfectUsingEdges(input);
+
+        Assert.assertTrue(b);
     }
 
 
-
-
-
-    }
+}

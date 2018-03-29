@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -180,19 +182,9 @@ public final class MatrixUtils {
 
     }
 
-    /**
-     * <blockquote><pre>
-     * 0 1 2
-     *   3
-     *   4
-     *   5
-     * </pre></blockquote>
-     *
-     * @param unfolded
-     * @return
-     */
 
-    public static boolean isCubePerfect(List<int[][]> unfolded) {
+
+    /*public static boolean isCubePerfect(List<int[][]> unfolded) {
 
 
         //unfolded.forEach(e->log.info(Arrays.deepToString(e)));
@@ -201,20 +193,20 @@ public final class MatrixUtils {
         //1-3
         if (!checkOneEdge(
 
-                edge(unfolded.get(0), Edge.BOTTOM, true),
-                edge(unfolded.get(3), Edge.LEFT, false),
+                edge(unfolded.get(0), Edge.BOTTOM_REVERSE),
+                edge(unfolded.get(3), Edge.LEFT),
 
 
-                edge(unfolded.get(2), Edge.BOTTOM, true),
-                edge(unfolded.get(3), Edge.RIGHT, true),
+                edge(unfolded.get(2), Edge.BOTTOM_REVERSE),
+                edge(unfolded.get(3), Edge.RIGHT_REVERSE),
 
 
-                edge(unfolded.get(1), Edge.BOTTOM, false),
-                edge(unfolded.get(3), Edge.TOP, false)
+                edge(unfolded.get(1), Edge.BOTTOM),
+                edge(unfolded.get(3), Edge.TOP)
 
         )) {
             return false;
-        }
+        }*/
 
 
 /*
@@ -254,7 +246,7 @@ public final class MatrixUtils {
         log.info(Long.toBinaryString(edgeBR));
 */
 
-        //int[] a = new int[]{1, 1, 1, 0, 0, 1};
+    //int[] a = new int[]{1, 1, 1, 0, 0, 1};
 
 
 
@@ -288,12 +280,27 @@ public final class MatrixUtils {
             return edges;
         }).collect(Collectors.toList());
 */
-        return true;
+   /*     return true;
+    }*/
+
+
+    private static int one(int a, int b, int c, int d) {
+        return (a & ~b & ~c & ~d) | (~a & b & ~c & ~d) | (~a & ~b & c & ~d) | (~a & ~b & ~c & d);
     }
 
-    private static boolean checkOneEdge(int... edges) {
-        int r = (edges[0] & 0b10000) ^ (edges[1] & 0b10000) ^ (edges[2] & 0b00001) ^ (edges[3] & 0b00001) ^ edges[4] ^ edges[5];
-        return 15 == r;
+    public static boolean checkOneEdge(int... edges) {
+
+        log.info(String.format("%5s", Integer.toBinaryString(edges[0])).replace(' ', '0'));
+        log.info(String.format("%5s", Integer.toBinaryString(edges[1])).replace(' ', '0'));
+        log.info(String.format("%5s", Integer.toBinaryString(edges[2])).replace(' ', '0'));
+        log.info(String.format("%5s", Integer.toBinaryString(edges[3])).replace(' ', '0'));
+
+
+        int r = one((edges[0] & 0b10000),
+                edges[1], edges[2],
+                (edges[3] & 0b00001));
+
+        return 31 == r;
     }
 
     public enum Edge {
@@ -308,10 +315,25 @@ public final class MatrixUtils {
     }
 
 
-    private static int edge(int[][] matrix, Edge edge, boolean reverse) {
+    /**
+     * Returns int representation of matrix edges
+     *
+     * @param matrix initial matrix
+     * @return map of int
+     */
+    public static Map<Edge, Integer> getMagicNumbersOfOneMatrix(int[][] matrix) {
+        Map<Edge, Integer> res = new EnumMap<>(Edge.class);
+
+        for (Edge e : Edge.values()) {
+            res.put(e, edge(matrix, e));
+        }
+        return res;
+    }
+
+
+    private static int edge(int[][] matrix, Edge edge) {
 
         int res = 0;
-
 
         switch (edge) {
             case TOP_REVERSE:
@@ -340,7 +362,7 @@ public final class MatrixUtils {
                 break;
         }
 
-        log.info(Long.toBinaryString(res));
+        //log.info(Long.toBinaryString(res));
         return res;
     }
 

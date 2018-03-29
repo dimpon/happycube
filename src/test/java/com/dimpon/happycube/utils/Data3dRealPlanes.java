@@ -5,6 +5,34 @@ package com.dimpon.happycube.utils;
  */
 public class Data3dRealPlanes {
 
+
+
+    /*
+
+    <blockcode><pre>
+  o    o o o o
+ ooo ooooo ooo
+ooooo ooo ooooo
+ ooo ooooo ooo
+  o   o oo  o
+     o o
+     ooooo
+      ooo
+     ooooo
+      o o
+     o o o
+     ooooo
+      ooo
+     ooooo
+     o o o
+      o o
+     oooo
+      oooo
+     oooo
+     oo o
+ </blockcode></pre>
+     */
+
     public static final int[][] topPlaneReal = new int[][]{
             {0, 0, 1, 0, 1},
             {1, 1, 1, 1, 1},
@@ -52,8 +80,6 @@ public class Data3dRealPlanes {
             {1, 1, 1, 1, 1},
             {1, 0, 1, 0, 1}
     };
-
-
 
 
     public static final int[][][] coloredCube = new int[][][]{

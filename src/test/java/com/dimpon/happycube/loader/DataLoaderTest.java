@@ -7,6 +7,7 @@ import lombok.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 
@@ -101,6 +102,11 @@ public class DataLoaderTest {
 
         @Override
         public int[][] getPositionByKey(int key) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Map<MatrixUtils.Edge, Integer> getEdgeMagicNumbers(int key) {
             throw new UnsupportedOperationException();
         }
     }

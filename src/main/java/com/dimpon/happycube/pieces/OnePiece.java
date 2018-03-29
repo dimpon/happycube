@@ -1,5 +1,8 @@
 package com.dimpon.happycube.pieces;
 
+import com.dimpon.happycube.utils.MatrixUtils;
+
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -32,6 +35,8 @@ public interface OnePiece {
     Stream<Integer> positionsSetKeys();
 
     int[][] getPositionByKey(int key);
+
+    Map<MatrixUtils.Edge,Integer> getEdgeMagicNumbers(int key);
 
 
 

@@ -5,6 +5,7 @@ import com.dimpon.happycube.exception.HappyCubeException;
 import com.dimpon.happycube.loader.DataLoader;
 import com.dimpon.happycube.pieces.helpers.CartesianProductFinder;
 import com.dimpon.happycube.pieces.helpers.PermutationsFinder;
+import com.dimpon.happycube.utils.MatrixUtils;
 import com.dimpon.happycube.utils.PerfectCubeChecker;
 import com.dimpon.happycube.write.SolutionWriter;
 import lombok.Builder;
@@ -109,6 +110,15 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
         throw new HappyCubeException(PIECE_POSITION_NOT_FOUND);
     }
 
+    Map<MatrixUtils.Edge,Integer> getEdgeMagicNumbersKey(int key) {
+        for (OnePiece set : positionsSets) {
+            Optional<Integer> first = set.positionsSetKeys().filter((e) -> e.equals(key)).findFirst();
+            if (first.isPresent())
+                return set.getEdgeMagicNumbers(key);
+        }
+        throw new HappyCubeException(PIECE_POSITION_NOT_FOUND);
+    }
+
     /**
      * Checks whether permutation is a perfect cube and writes to file
      *
@@ -116,7 +126,7 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
      * @return true or false
      */
     @Override
-    public boolean checkOnePermutation(int[] keys) {
+    /*public boolean checkOnePermutation(int[] keys) {
 
         List<int[][]> matrices = Arrays.stream(keys)
                 .mapToObj(this::getPiecePositionByKey)
@@ -129,7 +139,28 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
         }
 
         return isPerfect;
+    }*/
+
+    public boolean checkOnePermutation(int[] keys) {
+
+        List<Map<MatrixUtils.Edge,Integer>> matrices = Arrays.stream(keys)
+                .mapToObj(this::getEdgeMagicNumbersKey)
+                .collect(Collectors.toList());
+
+        boolean isPerfect = PerfectCubeChecker.isCubePerfectUsingEdges(matrices);
+
+        if (isPerfect) {
+
+            List<int[][]> matrices1 = Arrays.stream(keys)
+                    .mapToObj(this::getPiecePositionByKey)
+                    .collect(Collectors.toList());
+
+            writer.writeSolutionToFile(matrices1);
+        }
+
+        return isPerfect;
     }
+
 
     @Override
     public void perfectPermutationFound() {
