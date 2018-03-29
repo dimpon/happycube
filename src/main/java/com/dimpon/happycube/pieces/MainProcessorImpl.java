@@ -143,11 +143,11 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
 
     public boolean checkOnePermutation(int[] keys) {
 
-        List<Map<MatrixUtils.Edge,Integer>> matrices = Arrays.stream(keys)
+        List<Map<MatrixUtils.Edge,Integer>> edges = Arrays.stream(keys)
                 .mapToObj(this::getEdgeMagicNumbersKey)
                 .collect(Collectors.toList());
 
-        boolean isPerfect = PerfectCubeChecker.isCubePerfectUsingEdges(matrices);
+        boolean isPerfect = PerfectCubeChecker.isCubePerfectUsingEdges(edges);
 
         if (isPerfect) {
 

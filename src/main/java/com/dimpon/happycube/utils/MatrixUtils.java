@@ -127,13 +127,6 @@ public final class MatrixUtils {
     }
 
 
-   /* private static final int[][] patternToCheck = new int[][]{
-            {1, 1, 1, 1, 1},
-            {1, 0, 0, 0, 1},
-            {1, 0, 0, 0, 1},
-            {1, 0, 0, 0, 1},
-            {1, 1, 1, 1, 1}
-    };*/
 
     private static final int[][] pattern = new int[][]{
             {0, 0, 0, 0, 0},
@@ -184,104 +177,6 @@ public final class MatrixUtils {
 
 
 
-    /*public static boolean isCubePerfect(List<int[][]> unfolded) {
-
-
-        //unfolded.forEach(e->log.info(Arrays.deepToString(e)));
-
-
-        //1-3
-        if (!checkOneEdge(
-
-                edge(unfolded.get(0), Edge.BOTTOM_REVERSE),
-                edge(unfolded.get(3), Edge.LEFT),
-
-
-                edge(unfolded.get(2), Edge.BOTTOM_REVERSE),
-                edge(unfolded.get(3), Edge.RIGHT_REVERSE),
-
-
-                edge(unfolded.get(1), Edge.BOTTOM),
-                edge(unfolded.get(3), Edge.TOP)
-
-        )) {
-            return false;
-        }*/
-
-
-/*
-            log.info(Arrays.deepToString(unfolded.get(1)));
-
-
-        int[] r = new int[]{
-                0b01111,
-                0b11111,
-
-                0b01110,
-                0b01111,
-
-                0b01010,
-                0b00100,
-        };
-*/
-
-
-/*
-        boolean b = checkOneEdge(r);
-
-
-        int edgeT = edge(unfolded.get(1), Edge.LEFT, false);
-        log.info(Long.toBinaryString(edgeT));
-
-
-        int edgeTR = edge(unfolded.get(1), Edge.LEFT, true);
-        log.info(Long.toBinaryString(edgeTR));
-
-
-        int edgeB = edge(unfolded.get(1), Edge.RIGHT, false);
-        log.info(Long.toBinaryString(edgeB));
-
-
-        int edgeBR = edge(unfolded.get(1), Edge.RIGHT, true);
-        log.info(Long.toBinaryString(edgeBR));
-*/
-
-    //int[] a = new int[]{1, 1, 1, 0, 0, 1};
-
-
-
-        /*IntStream.range(0, 0).peek(e -> log.info(e + "")).forEach(value -> {
-        });*/
-
-
-       /* int asInt = IntStream.range(0, 6).map(i -> a[i]).reduce((left, right) -> {
-            log.info(left + "  " + right);
-            return (left << 1) + right;
-        }).getAsInt();
-
-        log.info(Long.toBinaryString(asInt));
-*/
-
-        /*log.info(Arrays.deepToString(unfolded.get(0)));
-
-        List<int[]> onlyEdgesInInt = unfolded.stream().map(m -> {
-            int[] edges = new int[4];
-
-            edges[0] = IntStream.range(0, MATRIX_SIZE).map(i -> m[0][i]).reduce((left, right) -> {
-                return (left << 1) + right;
-            }).getAsInt();
-
-
-            edges[3] = IntStream.range(0, MATRIX_SIZE).map(i -> m[MATRIX_SIZE - 1][i]).reduce((left, right) -> {
-                return (left << 1) + right;
-            }).getAsInt();
-
-
-            return edges;
-        }).collect(Collectors.toList());
-*/
-   /*     return true;
-    }*/
 
 
     private static int one(int a, int b, int c, int d) {
@@ -290,10 +185,11 @@ public final class MatrixUtils {
 
     public static boolean checkOneEdge(int... edges) {
 
-        log.info(String.format("%5s", Integer.toBinaryString(edges[0])).replace(' ', '0'));
-        log.info(String.format("%5s", Integer.toBinaryString(edges[1])).replace(' ', '0'));
-        log.info(String.format("%5s", Integer.toBinaryString(edges[2])).replace(' ', '0'));
-        log.info(String.format("%5s", Integer.toBinaryString(edges[3])).replace(' ', '0'));
+        log.debug(String.format("%5s", Integer.toBinaryString(edges[0])).replace(' ', '0'));
+        log.debug(String.format("%5s", Integer.toBinaryString(edges[1])).replace(' ', '0'));
+        log.debug(String.format("%5s", Integer.toBinaryString(edges[2])).replace(' ', '0'));
+        log.debug(String.format("%5s", Integer.toBinaryString(edges[3])).replace(' ', '0'));
+        log.debug("");
 
 
         int r = one((edges[0] & 0b10000),
@@ -330,7 +226,13 @@ public final class MatrixUtils {
         return res;
     }
 
-
+    /**
+     * Calculates the magic number for piece edge (basically the int representation of binary edge)
+     *
+     * @param matrix piece
+     * @param edge wich edge to calculate
+     * @return int representation of binary edge
+     */
     private static int edge(int[][] matrix, Edge edge) {
 
         int res = 0;
@@ -362,17 +264,7 @@ public final class MatrixUtils {
                 break;
         }
 
-        //log.info(Long.toBinaryString(res));
         return res;
     }
-
-
-/*
-    public static IntStream streamInReverse(int[] input) {
-        return IntStream.range(1, input.length + 1).map(
-                i -> input[input.length - i]);
-    }
-*/
-
 
 }
