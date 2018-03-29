@@ -23,6 +23,16 @@ public class PerfectCubeChecker {
         return Matrix3dUtils.isCubePerfect(cube);
     }
 
+    public static boolean isCubePerfect(List<int[][]> unfolded,List<Map<MatrixUtils.Edge, Integer>> edges) {
+
+        if (!isMakeSenseToCheckFurtherUsingMagicNumbers(edges)) {
+            return false;
+        }
+
+        int[][][] cube = foldTheCube(unfolded);
+        return Matrix3dUtils.isCubePerfect(cube);
+    }
+
     /**
      * 012
      * 3
@@ -33,11 +43,16 @@ public class PerfectCubeChecker {
      * @return
      */
 
-    public static boolean isCubePerfectUsingEdges(List<Map<MatrixUtils.Edge, Integer>> unfolded) {
+    public static boolean isCubePerfectUsingEdges(List<Map<MatrixUtils.Edge, Integer>> unfolded, List<int[][]> unfoldedMa) {
+
+        if (!isMakeSenseToCheckFurther(unfoldedMa)) {
+            return false;
+        }
+
 
         //1-3
         if (!MatrixUtils.checkOneEdge(
-                unfolded.get(0).get(MatrixUtils.Edge.LEFT_REVERSE),
+                unfolded.get(0).get(MatrixUtils.Edge.RIGHT_REVERSE),
                 unfolded.get(1).get(MatrixUtils.Edge.BOTTOM),
                 unfolded.get(3).get(MatrixUtils.Edge.TOP),
                 unfolded.get(2).get(MatrixUtils.Edge.LEFT_REVERSE)
@@ -71,8 +86,10 @@ public class PerfectCubeChecker {
         //1-5
         if (!MatrixUtils.checkOneEdge(
                 unfolded.get(0).get(MatrixUtils.Edge.TOP_REVERSE),
+
                 unfolded.get(1).get(MatrixUtils.Edge.TOP),
                 unfolded.get(5).get(MatrixUtils.Edge.BOTTOM),
+
                 unfolded.get(2).get(MatrixUtils.Edge.TOP_REVERSE)
         )) {
             log.debug("1-5");
@@ -81,10 +98,10 @@ public class PerfectCubeChecker {
 
         //4-3
         if (!MatrixUtils.checkOneEdge(
-                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM_REVERSE),
-                unfolded.get(4).get(MatrixUtils.Edge.TOP),
+                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM),
                 unfolded.get(3).get(MatrixUtils.Edge.BOTTOM),
-                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM_REVERSE)
+                unfolded.get(4).get(MatrixUtils.Edge.TOP),
+                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM)
         )) {
             log.debug("4-3");
             return false;
@@ -92,10 +109,10 @@ public class PerfectCubeChecker {
 
         //4-5
         if (!MatrixUtils.checkOneEdge(
-                unfolded.get(0).get(MatrixUtils.Edge.RIGHT_REVERSE),
+                unfolded.get(0).get(MatrixUtils.Edge.TOP),
                 unfolded.get(4).get(MatrixUtils.Edge.BOTTOM),
                 unfolded.get(5).get(MatrixUtils.Edge.TOP),
-                unfolded.get(2).get(MatrixUtils.Edge.RIGHT_REVERSE)
+                unfolded.get(2).get(MatrixUtils.Edge.TOP_REVERSE)
 
         )) {
             log.debug("4-5");
@@ -129,10 +146,10 @@ public class PerfectCubeChecker {
 
         //3-0
         if (!MatrixUtils.checkOneEdge(
-                unfolded.get(1).get(MatrixUtils.Edge.LEFT_REVERSE),
+                unfolded.get(1).get(MatrixUtils.Edge.BOTTOM),
                 unfolded.get(3).get(MatrixUtils.Edge.LEFT),
                 unfolded.get(0).get(MatrixUtils.Edge.BOTTOM_REVERSE),
-                unfolded.get(4).get(MatrixUtils.Edge.LEFT_REVERSE)
+                unfolded.get(4).get(MatrixUtils.Edge.TOP_REVERSE)
 
         )) {
             log.debug("3-0");
@@ -141,10 +158,10 @@ public class PerfectCubeChecker {
 
         //3-2
         if (!MatrixUtils.checkOneEdge(
-                unfolded.get(1).get(MatrixUtils.Edge.RIGHT_REVERSE),
+                unfolded.get(1).get(MatrixUtils.Edge.BOTTOM_REVERSE),
                 unfolded.get(3).get(MatrixUtils.Edge.RIGHT),
-                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM),
-                unfolded.get(4).get(MatrixUtils.Edge.RIGHT_REVERSE)
+                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(4).get(MatrixUtils.Edge.TOP)
 
         )) {
             log.debug("3-2");

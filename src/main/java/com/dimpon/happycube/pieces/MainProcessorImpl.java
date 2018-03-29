@@ -119,6 +119,7 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
         throw new HappyCubeException(PIECE_POSITION_NOT_FOUND);
     }
 
+
     /**
      * Checks whether permutation is a perfect cube and writes to file
      *
@@ -126,28 +127,36 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
      * @return true or false
      */
     @Override
-    /*public boolean checkOnePermutation(int[] keys) {
+    public boolean checkOnePermutation(int[] keys) {
 
         List<int[][]> matrices = Arrays.stream(keys)
                 .mapToObj(this::getPiecePositionByKey)
                 .collect(Collectors.toList());
 
-        boolean isPerfect = PerfectCubeChecker.isCubePerfect(matrices);
+        List<Map<MatrixUtils.Edge, Integer>> edges = Arrays.stream(keys)
+                .mapToObj(this::getEdgeMagicNumbersKey)
+                .collect(Collectors.toList());
+
+        boolean isPerfect = PerfectCubeChecker.isCubePerfect(matrices,edges);
 
         if (isPerfect) {
             writer.writeSolutionToFile(matrices);
         }
 
         return isPerfect;
-    }*/
+    }
 
-    public boolean checkOnePermutation(int[] keys) {
+   /* public boolean checkOnePermutation(int[] keys) {
+
+        List<int[][]> matrices = Arrays.stream(keys)
+                .mapToObj(this::getPiecePositionByKey)
+                .collect(Collectors.toList());
 
         List<Map<MatrixUtils.Edge,Integer>> edges = Arrays.stream(keys)
                 .mapToObj(this::getEdgeMagicNumbersKey)
                 .collect(Collectors.toList());
 
-        boolean isPerfect = PerfectCubeChecker.isCubePerfectUsingEdges(edges);
+        boolean isPerfect = PerfectCubeChecker.isCubePerfectUsingEdges(edges,matrices);
 
         if (isPerfect) {
 
@@ -159,7 +168,7 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
         }
 
         return isPerfect;
-    }
+    }*/
 
 
     @Override

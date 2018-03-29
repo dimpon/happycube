@@ -107,8 +107,9 @@ public class DataLoaderTest {
 
         @Override
         public Map<MatrixUtils.Edge, Integer> getEdgeMagicNumbers(int key) {
-            throw new UnsupportedOperationException();
+             throw new UnsupportedOperationException();
         }
+
     }
 
 }

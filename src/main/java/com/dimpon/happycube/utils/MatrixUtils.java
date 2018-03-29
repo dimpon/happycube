@@ -233,7 +233,7 @@ public final class MatrixUtils {
      * @param edge wich edge to calculate
      * @return int representation of binary edge
      */
-    private static int edge(int[][] matrix, Edge edge) {
+     static int edge(int[][] matrix, Edge edge) {
 
         int res = 0;
 

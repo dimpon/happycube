@@ -66,6 +66,10 @@ public class Matrix3dUtilsTest {
 
         Assert.assertTrue(Matrix3dUtils.isCubePerfect(out));
 
+        int[][][] out1 = Matrix3dUtils.foldTheCube(Arrays.stream(realCubeLilac).collect(Collectors.toList()));
+
+        Assert.assertTrue(Matrix3dUtils.isCubePerfect(out1));
+
     }
 
     @Test

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.dimpon.happycube.utils.Data3dRealPlanes.*;
 import static com.dimpon.happycube.utils.Data3dRealPlanes.backPlaneReal;
@@ -238,6 +239,30 @@ public class MatrixUtilsTest {
     }
 
 
+    @Test
+    public void testCalculateIntRepresentationOfOneEdge() throws Exception {
+
+        final int[][] matrix = new int[][]{
+                {1, 1, 1, 0, 1},
+                {0, 1, 1, 1, 1},
+                {1, 1, 1, 1, 0},
+                {1, 1, 1, 1, 0},
+                {0, 0, 1, 1, 1}
+        };
+
+
+        Assert.assertEquals(0b11101, MatrixUtils.edge(matrix,Edge.TOP));
+        Assert.assertEquals(0b10111, MatrixUtils.edge(matrix,Edge.TOP_REVERSE));
+        Assert.assertEquals(0b00111, MatrixUtils.edge(matrix,Edge.BOTTOM));
+        Assert.assertEquals(0b11100, MatrixUtils.edge(matrix,Edge.BOTTOM_REVERSE));
+        Assert.assertEquals(0b10110, MatrixUtils.edge(matrix,Edge.LEFT));
+        Assert.assertEquals(0b01101, MatrixUtils.edge(matrix,Edge.LEFT_REVERSE));
+        Assert.assertEquals(0b11001, MatrixUtils.edge(matrix,Edge.RIGHT));
+        Assert.assertEquals(0b10011, MatrixUtils.edge(matrix,Edge.RIGHT_REVERSE));
+
+
+    }
+
 
     @Test
     public void testCheckOneEdge() throws Exception {
@@ -273,71 +298,13 @@ public class MatrixUtilsTest {
 
     }
 
-    @Test
-    public void testCalculateEdgesMagicNumbers() throws Exception {
-
-        int[][] plane = new int[][]{
-                {0, 0, 1, 0, 1},
-                {1, 1, 1, 1, 1},
-                {0, 1, 1, 1, 0},
-                {1, 1, 1, 1, 1},
-                {1, 1, 1, 0, 1}
-        };
-
-        OnePiece p1 = new OnePieceImpl(0);
-        p1.populate(plane);
-
-        Map<Edge, Integer> mn = p1.getEdgeMagicNumbers(10);
-
-        Assert.assertEquals(new Integer(5), mn.get(Edge.TOP));
-        Assert.assertEquals(new Integer(20), mn.get(Edge.TOP_REVERSE));
-
-        Assert.assertEquals(new Integer(11), mn.get(Edge.LEFT));
-        Assert.assertEquals(new Integer(26), mn.get(Edge.LEFT_REVERSE));
-
-        Assert.assertEquals(new Integer(27), mn.get(Edge.RIGHT));
-        Assert.assertEquals(new Integer(27), mn.get(Edge.RIGHT_REVERSE));
-
-        Assert.assertEquals(new Integer(29), mn.get(Edge.BOTTOM));
-        Assert.assertEquals(new Integer(23), mn.get(Edge.BOTTOM_REVERSE));
-
-    }
-
-    @Test
-    public void testIsCubePerfectUsingEdges() throws Exception {
-
-        OnePiece p0 = new OnePieceImpl(0);
-        p0.populate(leftPlaneReal);
-
-        OnePiece p1 = new OnePieceImpl(1);
-        p1.populate(topPlaneReal);
-
-        OnePiece p2 = new OnePieceImpl(2);
-        p2.populate(rightPlaneReal);
-
-        OnePiece p3 = new OnePieceImpl(3);
-        p3.populate(frontPlaneReal);
-
-        OnePiece p4 = new OnePieceImpl(4);
-        p4.populate(bottomPlaneReal);
-
-        OnePiece p5 = new OnePieceImpl(5);
-        p5.populate(backPlaneReal);
 
 
-        List<Map<Edge, Integer>> input = new ArrayList<>(6);
-        input.add(p0.getEdgeMagicNumbers(10));
-        input.add(p1.getEdgeMagicNumbers(20));
-        input.add(p2.getEdgeMagicNumbers(30));
-        input.add(p3.getEdgeMagicNumbers(40));
-        input.add(p4.getEdgeMagicNumbers(50));
-        input.add(p5.getEdgeMagicNumbers(60));
 
 
-        boolean b = PerfectCubeChecker.isCubePerfectUsingEdges(input);
 
-        Assert.assertTrue(b);
-    }
+
+
 
 
 }

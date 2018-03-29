@@ -2,6 +2,7 @@ package com.dimpon.happycube.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -12,6 +13,7 @@ import static com.dimpon.happycube.utils.MatrixUtils.MATRIX_SIZE;
  * The calss contains util methods for 3d matrices, e.g. int[][][]
  * Of course these methods can be placed in {@link MatrixUtils} but I decided that 200 lines is enough for one class
  */
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Matrix3dUtils {
 
@@ -226,6 +228,55 @@ public class Matrix3dUtils {
         return res == 3;
     }
 
+
+    static boolean isMakeSenseToCheckFurtherUsingMagicNumbers(List<Map<MatrixUtils.Edge, Integer>> edges) {
+
+
+        //0-1
+       /* if (!isTwoEdgesMatch(
+                edges.get(0).get(MatrixUtils.Edge.RIGHT) ,
+                edges.get(1).get(MatrixUtils.Edge.LEFT))) {
+            return false;
+        }
+
+        //1-2
+        if (!isTwoEdgesMatch(
+                edges.get(1).get(MatrixUtils.Edge.LEFT) ,
+                edges.get(2).get(MatrixUtils.Edge.RIGHT))) {
+            return false;
+        }*/
+
+        //1-3
+        if (!isTwoEdgesMatch(
+                edges.get(1).get(MatrixUtils.Edge.BOTTOM) ,
+                edges.get(3).get(MatrixUtils.Edge.TOP))) {
+            return false;
+        }
+
+        //1-5
+        /*if (!isTwoEdgesMatch(
+                edges.get(1).get(MatrixUtils.Edge.TOP) ,
+                edges.get(5).get(MatrixUtils.Edge.BOTTOM))) {
+            return false;
+        }
+
+        //4-3
+        if (!isTwoEdgesMatch(
+                edges.get(4).get(MatrixUtils.Edge.TOP) ,
+                edges.get(3).get(MatrixUtils.Edge.BOTTOM))) {
+            return false;
+        }*/
+
+        return true;
+
+    }
+
+    static boolean isTwoEdgesMatch(int one, int two) {
+        log.debug(String.format("%5s", Integer.toBinaryString(one)).replace(' ', '0'));
+        log.debug(String.format("%5s", Integer.toBinaryString(two)).replace(' ', '0'));
+        int res = one ^ two ^ 0b10000 ^ 0b00001;
+        return res == 14;
+    }
 
     /**
      * Method checks whether cube is perfect.
