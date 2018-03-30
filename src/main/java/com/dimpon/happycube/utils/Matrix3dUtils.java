@@ -37,7 +37,7 @@ public class Matrix3dUtils {
         int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
 
 
-        int[][] leftPlane = unfolded.get(0);
+       int[][] leftPlane = unfolded.get(0);
 
         for (int i = 0; i < MATRIX_SIZE; i++) {
             for (int j = 0, z = MATRIX_SIZE - 1; j < MATRIX_SIZE; j++, z--) {
@@ -180,7 +180,7 @@ public class Matrix3dUtils {
         //the checks below gives less performance. Hardcoding is ugly too.
 
         //1-2
-        int[][] pl0 = unfolded.get(0);
+        /*int[][] pl0 = unfolded.get(0);
         int[][] pl1 = unfolded.get(1);
         if (!isTwoEdgesMatch(new int[]{
                         pl0[0][MATRIX_SIZE - 1],
@@ -216,7 +216,7 @@ public class Matrix3dUtils {
 
             return false;
         }
-
+*/
         return true;
     }
 
@@ -233,39 +233,60 @@ public class Matrix3dUtils {
 
 
         //0-1
-       /* if (!isTwoEdgesMatch(
-                edges.get(0).get(MatrixUtils.Edge.RIGHT) ,
+        if (!isTwoEdgesMatch(
+                edges.get(0).get(MatrixUtils.Edge.RIGHT),
                 edges.get(1).get(MatrixUtils.Edge.LEFT))) {
             return false;
         }
 
         //1-2
         if (!isTwoEdgesMatch(
-                edges.get(1).get(MatrixUtils.Edge.LEFT) ,
-                edges.get(2).get(MatrixUtils.Edge.RIGHT))) {
+                edges.get(1).get(MatrixUtils.Edge.RIGHT),
+                edges.get(2).get(MatrixUtils.Edge.LEFT))) {
             return false;
-        }*/
+        }
 
         //1-3
         if (!isTwoEdgesMatch(
-                edges.get(1).get(MatrixUtils.Edge.BOTTOM) ,
+                edges.get(1).get(MatrixUtils.Edge.BOTTOM),
                 edges.get(3).get(MatrixUtils.Edge.TOP))) {
             return false;
         }
 
         //1-5
-        /*if (!isTwoEdgesMatch(
-                edges.get(1).get(MatrixUtils.Edge.TOP) ,
+        if (!isTwoEdgesMatch(
+                edges.get(1).get(MatrixUtils.Edge.TOP),
                 edges.get(5).get(MatrixUtils.Edge.BOTTOM))) {
             return false;
         }
 
         //4-3
         if (!isTwoEdgesMatch(
-                edges.get(4).get(MatrixUtils.Edge.TOP) ,
+                edges.get(4).get(MatrixUtils.Edge.TOP),
                 edges.get(3).get(MatrixUtils.Edge.BOTTOM))) {
             return false;
-        }*/
+        }
+
+        //4-5
+        if (!isTwoEdgesMatch(
+                edges.get(4).get(MatrixUtils.Edge.BOTTOM),
+                edges.get(5).get(MatrixUtils.Edge.TOP))) {
+            return false;
+        }
+
+        //4-0
+        if (!isTwoEdgesMatch(
+                edges.get(4).get(MatrixUtils.Edge.LEFT),
+                edges.get(0).get(MatrixUtils.Edge.LEFT_REVERSE))) {
+            return false;
+        }
+
+        //4-2
+        if (!isTwoEdgesMatch(
+                edges.get(4).get(MatrixUtils.Edge.RIGHT),
+                edges.get(2).get(MatrixUtils.Edge.RIGHT_REVERSE))) {
+            return false;
+        }
 
         return true;
 
@@ -274,8 +295,8 @@ public class Matrix3dUtils {
     static boolean isTwoEdgesMatch(int one, int two) {
         log.debug(String.format("%5s", Integer.toBinaryString(one)).replace(' ', '0'));
         log.debug(String.format("%5s", Integer.toBinaryString(two)).replace(' ', '0'));
-        int res = one ^ two ^ 0b10000 ^ 0b00001;
-        return res == 14;
+        int res = (one & 0b01110) ^ (two & 0b01110);
+        return res == 0b01110;
     }
 
     /**

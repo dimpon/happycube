@@ -2,6 +2,7 @@ package com.dimpon.happycube.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -45,6 +46,38 @@ public class Matrix3dUtilsTest {
         Assert.assertEquals(55, out[3][3][0]);
         Assert.assertEquals(55, out[3][3][0]);
         Assert.assertEquals(66, out[4][1][1]);
+    }
+
+    @Test
+    @Ignore
+    public void testFoldTheCube2() throws Exception {
+
+        int[][] plane = new int[][]{
+                {1, 1, 1, 1, 1},
+                {2, 2, 2, 2, 2},
+                {3, 3, 3, 3, 3},
+                {4, 4, 4, 4, 4},
+                {5, 5, 5, 5, 5}
+        };
+
+        List<int[][]> unfolded = new ArrayList<>(6);
+        unfolded.add(plane);
+        unfolded.add(plane);
+        unfolded.add(plane);
+
+        unfolded.add(plane);
+        unfolded.add(plane);
+        unfolded.add(plane);
+
+
+        int[][][] out = Matrix3dUtils.foldTheCube(unfolded);
+
+        for (int z = 0; z < MATRIX_SIZE; z++) {
+            for (int i = 0; i < MATRIX_SIZE; i++) {
+                log.info(Arrays.stream(out[z][i]).mapToObj(String::valueOf).collect(Collectors.joining(",")));
+            }
+        }
+
     }
 
     @Test
@@ -185,6 +218,13 @@ public class Matrix3dUtilsTest {
 
         Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(new int[]{5, 1, 1, 1, 0}, new int[]{0, 0, 0, 0, 7}));
 
+    }
+
+    @Test
+    public void testIsTwoEdgesMatchInt() throws Exception {
+        Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(0b11010,0b10101));
+        Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(0b10011,0b11101));
+        Assert.assertFalse(Matrix3dUtils.isTwoEdgesMatch(0b10111,0b11101));
     }
 
 
