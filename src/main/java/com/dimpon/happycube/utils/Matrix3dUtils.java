@@ -180,7 +180,7 @@ public class Matrix3dUtils {
         //the checks below gives less performance. Hardcoding is ugly too.
 
         //1-2
-        /*int[][] pl0 = unfolded.get(0);
+        int[][] pl0 = unfolded.get(0);
         int[][] pl1 = unfolded.get(1);
         if (!isTwoEdgesMatch(new int[]{
                         pl0[0][MATRIX_SIZE - 1],
@@ -216,7 +216,7 @@ public class Matrix3dUtils {
 
             return false;
         }
-*/
+
         return true;
     }
 
@@ -291,6 +291,155 @@ public class Matrix3dUtils {
         return true;
 
     }
+
+    public static boolean isCubePerfectUsingEdges(List<Map<MatrixUtils.Edge, Integer>> unfolded) {
+
+
+        //1-3
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM_REVERSE),
+                unfolded.get(1).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(3).get(MatrixUtils.Edge.TOP),
+                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM_REVERSE)
+        )) {
+            log.debug("1-3");
+            return false;
+        }
+
+        //0-1
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(5).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(0).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(1).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(3).get(MatrixUtils.Edge.TOP_REVERSE)
+        )) {
+            log.debug("0-1");
+            return false;
+        }
+
+        //1-2
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(5).get(MatrixUtils.Edge.BOTTOM_REVERSE),
+                unfolded.get(2).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(1).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(3).get(MatrixUtils.Edge.TOP)
+        )) {
+            log.debug("1-2");
+            return false;
+        }
+
+        //1-5
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(0).get(MatrixUtils.Edge.TOP_REVERSE),
+                unfolded.get(1).get(MatrixUtils.Edge.TOP),
+                unfolded.get(5).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(2).get(MatrixUtils.Edge.TOP_REVERSE)
+        )) {
+            log.debug("1-5");
+            return false;
+        }
+
+        //3-4
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(3).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(4).get(MatrixUtils.Edge.TOP),
+                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM)
+        )) {
+            log.debug("4-3");
+            return false;
+        }
+
+
+        //4-5
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(0).get(MatrixUtils.Edge.TOP),
+                unfolded.get(4).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(5).get(MatrixUtils.Edge.TOP),
+                unfolded.get(2).get(MatrixUtils.Edge.TOP)
+
+        )) {
+            log.debug("4-5");
+            return false;
+        }
+
+        //4-0
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(3).get(MatrixUtils.Edge.LEFT_REVERSE),
+                unfolded.get(4).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(0).get(MatrixUtils.Edge.LEFT_REVERSE),
+                unfolded.get(5).get(MatrixUtils.Edge.LEFT_REVERSE)
+
+        )) {
+            log.debug("4-0");
+            return false;
+        }
+
+        //4-2
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(3).get(MatrixUtils.Edge.RIGHT_REVERSE),
+                unfolded.get(4).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(2).get(MatrixUtils.Edge.RIGHT_REVERSE),
+                unfolded.get(5).get(MatrixUtils.Edge.RIGHT_REVERSE)
+
+        )) {
+            log.debug("4-2");
+            return false;
+        }
+
+
+        //3-0
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(1).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(3).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM_REVERSE),
+                unfolded.get(4).get(MatrixUtils.Edge.TOP_REVERSE)
+
+        )) {
+            log.debug("3-0");
+            return false;
+        }
+
+        //3-2
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(1).get(MatrixUtils.Edge.BOTTOM_REVERSE),
+                unfolded.get(3).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(4).get(MatrixUtils.Edge.TOP)
+
+        )) {
+            log.debug("3-2");
+            return false;
+        }
+
+        //5-0
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(4).get(MatrixUtils.Edge.LEFT_REVERSE),
+                unfolded.get(5).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(0).get(MatrixUtils.Edge.TOP),
+                unfolded.get(1).get(MatrixUtils.Edge.LEFT_REVERSE)
+
+        )) {
+            log.debug("5-0");
+            return false;
+        }
+
+        //5-2
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(4).get(MatrixUtils.Edge.RIGHT_REVERSE),
+                unfolded.get(5).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(2).get(MatrixUtils.Edge.TOP_REVERSE),
+                unfolded.get(1).get(MatrixUtils.Edge.RIGHT_REVERSE)
+
+        )) {
+            log.debug("5-2");
+            return false;
+        }
+
+
+        return true;
+    }
+
 
     static boolean isTwoEdgesMatch(int one, int two) {
         log.debug(String.format("%5s", Integer.toBinaryString(one)).replace(' ', '0'));

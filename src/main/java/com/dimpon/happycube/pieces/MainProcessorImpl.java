@@ -134,6 +134,7 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker,Piec
     public boolean checkOnePermutation(int[] keys) {
 
       boolean isPerfect = cubeChecker.check(keys);
+
         if (isPerfect) {
 
             List<int[][]> matrices = Arrays.stream(keys)
