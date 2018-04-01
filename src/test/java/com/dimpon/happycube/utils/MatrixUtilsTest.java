@@ -1,11 +1,20 @@
 package com.dimpon.happycube.utils;
 
+import com.dimpon.happycube.pieces.OnePiece;
+import com.dimpon.happycube.pieces.OnePieceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import static com.dimpon.happycube.utils.Data3dRealPlanes.*;
+import static com.dimpon.happycube.utils.Data3dRealPlanes.backPlaneReal;
+import static com.dimpon.happycube.utils.Data3dRealPlanes.bottomPlaneReal;
 import static com.dimpon.happycube.utils.MatrixUtils.*;
 
 @Slf4j
@@ -31,7 +40,7 @@ public class MatrixUtilsTest {
                 {1, 2, 3, 4, 5}
         };
 
-        int[][] copy = Arrays.copyOf(in,in.length);
+        int[][] copy = Arrays.copyOf(in, in.length);
 
         //Act
         int[][] out = MatrixUtils.rotateToRight(in);
@@ -39,7 +48,7 @@ public class MatrixUtilsTest {
         //Assert
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(expectedResult, out));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(expectedResult, out));
-        Assert.assertTrue(Arrays.deepEquals(copy,in));//check that initial matrix wasn't changed
+        Assert.assertTrue(Arrays.deepEquals(copy, in));//check that initial matrix wasn't changed
     }
 
     @Test
@@ -54,7 +63,7 @@ public class MatrixUtilsTest {
                 {1, 0, 0, 1, 1}
         };
 
-        int[][] copy = Arrays.copyOf(in,in.length);
+        int[][] copy = Arrays.copyOf(in, in.length);
 
         //Act
         int[][] out = MatrixUtils.rotateToLeft(in);
@@ -62,7 +71,7 @@ public class MatrixUtilsTest {
         //Assert
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(expectedResult, out));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(expectedResult, out));
-        Assert.assertTrue(Arrays.deepEquals(copy,in));
+        Assert.assertTrue(Arrays.deepEquals(copy, in));
     }
 
     @Test
@@ -77,7 +86,7 @@ public class MatrixUtilsTest {
                 {5, 4, 3, 2, 1}
         };
 
-        int[][] copy = Arrays.copyOf(in,in.length);
+        int[][] copy = Arrays.copyOf(in, in.length);
 
         //Act
         int[][] out = MatrixUtils.rotate2times(in);
@@ -85,7 +94,7 @@ public class MatrixUtilsTest {
         //Assert
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(expectedResult, out));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(expectedResult, out));
-        Assert.assertTrue(Arrays.deepEquals(copy,in));
+        Assert.assertTrue(Arrays.deepEquals(copy, in));
     }
 
     @Test
@@ -100,7 +109,7 @@ public class MatrixUtilsTest {
                 {1, 0, 0, 1, 1}
         };
 
-        int[][] copy = Arrays.copyOf(in,in.length);
+        int[][] copy = Arrays.copyOf(in, in.length);
 
         //Act
         int[][] out = MatrixUtils.mirror(in);
@@ -108,7 +117,7 @@ public class MatrixUtilsTest {
         //Assert
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(expectedResult, out));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(expectedResult, out));
-        Assert.assertTrue(Arrays.deepEquals(copy,in));
+        Assert.assertTrue(Arrays.deepEquals(copy, in));
     }
 
     @Test
@@ -228,6 +237,71 @@ public class MatrixUtilsTest {
         Assert.assertFalse(MatrixUtils.isCornersOk(bad4));
 
     }
+
+
+    @Test
+    public void testCalculateIntRepresentationOfOneEdge() throws Exception {
+
+        final int[][] matrix = new int[][]{
+                {1, 1, 1, 0, 1},
+                {0, 1, 1, 1, 1},
+                {1, 1, 1, 1, 0},
+                {1, 1, 1, 1, 0},
+                {0, 0, 1, 1, 1}
+        };
+
+
+        Assert.assertEquals(0b11101, MatrixUtils.edge(matrix,Edge.TOP));
+        Assert.assertEquals(0b10111, MatrixUtils.edge(matrix,Edge.TOP_REVERSE));
+        Assert.assertEquals(0b00111, MatrixUtils.edge(matrix,Edge.BOTTOM));
+        Assert.assertEquals(0b11100, MatrixUtils.edge(matrix,Edge.BOTTOM_REVERSE));
+        Assert.assertEquals(0b10110, MatrixUtils.edge(matrix,Edge.LEFT));
+        Assert.assertEquals(0b01101, MatrixUtils.edge(matrix,Edge.LEFT_REVERSE));
+        Assert.assertEquals(0b11001, MatrixUtils.edge(matrix,Edge.RIGHT));
+        Assert.assertEquals(0b10011, MatrixUtils.edge(matrix,Edge.RIGHT_REVERSE));
+
+
+    }
+
+
+    @Test
+    public void testCheckOneEdge() throws Exception {
+
+        Assert.assertTrue(MatrixUtils
+                .checkOneEdge(
+                        0b10000,
+                        0b01010,
+                        0b00100,
+                        0b00001));
+
+        Assert.assertTrue(MatrixUtils
+                .checkOneEdge(
+                        0b11111,
+                        0b01010,
+                        0b00100,
+                        0b11111));
+
+        Assert.assertTrue(MatrixUtils
+                .checkOneEdge(
+                        0b00100,
+                        0b01000,
+                        0b10110,
+                        0b00001));
+
+
+        Assert.assertTrue(MatrixUtils
+                .checkOneEdge(
+                        0b00100,
+                        0b01010,
+                        0b10100,
+                        0b11011));
+
+    }
+
+
+
+
+
 
 
 

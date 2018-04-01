@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -30,21 +31,23 @@ public class SolutionWriterImpl implements SolutionWriter {
         this.extension = extension;
     }
 
-    private int solutionCounter = 1;
+    /**
+     * Several streams are using writer in prallel
+     */
+    private AtomicInteger solutionCounter = new AtomicInteger(1);
 
     /**
      * {@inheritDoc}
-     *
-     * the method is synchronized because in shared in parallel streams
+     * <p>
      *
      */
     @Override
     @SneakyThrows(IOException.class)
-    public synchronized void writeSolutionToFile(List<int[][]> unfolded) {
+    public void writeSolutionToFile(List<int[][]> unfolded) {
 
         Stream<String> stream = generateFileContent(unfolded);
 
-        String filePath = path + "/" + prefix + solutionCounter + "." + extension;
+        String filePath = path + "/" + prefix + solutionCounter.getAndIncrement() + "." + extension;
 
         if (!Files.exists(Paths.get(path))) {
             //Files.createDirectory(Paths.get(path));
@@ -57,7 +60,6 @@ public class SolutionWriterImpl implements SolutionWriter {
         }
 
         Files.write(Paths.get(filePath), (Iterable<String>) stream::iterator);
-        solutionCounter++;
     }
 
     private static final String OFFSET = "     ";
@@ -66,35 +68,34 @@ public class SolutionWriterImpl implements SolutionWriter {
 
     /**
      * todo improve readability of code below. May be streams is not the best option here, or i used it in not optimal way
-     *
+     * <p>
      * The method transforms matrices to Stream<String> in order to write file line-by-line
-     *
+     * <p>
      * <blockquote><pre>
      * 00000 11111 22222
      * 00000 11111 22222
      * 00000 11111 22222
      * 00000 11111 22222
      * 00000 11111 22222
-     *
+     * <p>
      *       33333
      *       33333
      *       33333
      *       33333
      *       33333
-     *
+     * <p>
      *       44444
      *       44444
      *       44444
      *       44444
      *       44444
-     *
+     * <p>
      *       55555
      *       55555
      *       55555
      *       55555
      *       55555
      * </pre></blockquote>
-     *
      */
     private Stream<String> generateFileContent(List<int[][]> unfolded) {
 

@@ -3,9 +3,10 @@ package com.dimpon.happycube.pieces;
 
 import com.dimpon.happycube.exception.HappyCubeException;
 import com.dimpon.happycube.loader.DataLoader;
-import com.dimpon.happycube.pieces.helpers.CartesianProductFinder;
-import com.dimpon.happycube.pieces.helpers.PermutationsFinder;
-import com.dimpon.happycube.utils.PerfectCubeChecker;
+import com.dimpon.happycube.pieces.helpers.*;
+import com.dimpon.happycube.utils.Matrix3dUtils;
+import com.dimpon.happycube.utils.MatrixUtils;
+import com.dimpon.happycube.utils.PerfectCubeCheckerUtils;
 import com.dimpon.happycube.write.SolutionWriter;
 import lombok.Builder;
 import lombok.Singular;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.*;
+import static com.dimpon.happycube.utils.Matrix3dUtils.*;
 
 /**
  * Main class, manage solutions finding.
@@ -24,7 +26,7 @@ import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.*
  * 2. Start searching - find cartesian product and then for every combination run permutation finding in parallel.
  */
 @Slf4j
-public class MainProcessorImpl implements MainProcessor, PermutationChecker {
+public class MainProcessorImpl implements MainProcessor, PermutationChecker, PiecesAwareness {
 
 
     private final DataLoader loader;
@@ -35,9 +37,12 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
 
     private volatile boolean continueSearch = true;
 
+    private List<int[][][]> coloredCubes = new ArrayList<>();
+
     @Singular("position")
     private List<OnePiece> positionsSets;
 
+    private PerfectCubeChecker cubeChecker;
 
     @Builder
     public MainProcessorImpl(DataLoader loader, SolutionWriter writer, boolean findFirstSolutionOnly, List<OnePiece> positionsSets, BiPredicate<List<int[][][]>, int[][][]> checkSolutionUnique) {
@@ -46,6 +51,8 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
         this.findFirstSolutionOnly = findFirstSolutionOnly;
         this.positionsSets = positionsSets;
         this.checkSolutionUnique = checkSolutionUnique;
+
+        this.cubeChecker = new PerfectCubeCheckerA(this);
     }
 
 
@@ -86,12 +93,12 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
 
         PermutationsFinder pFinder = new PermutationsFinder(this);
 
-        combinations.parallel().forEach(comb -> {
-            if (continueSearch)
-                pFinder.permutations(comb);
-        });
-
-
+        combinations
+                .parallel()
+                .forEach(comb -> {
+                    if (continueSearch)
+                        pFinder.permutations(comb);
+                });
     }
 
     /**
@@ -100,7 +107,8 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
      * @param key int key
      * @return matrix 5x5
      */
-    int[][] getPiecePositionByKey(int key) {
+    @Override
+    public int[][] getPiecePositionByKey(int key) {
         for (OnePiece set : positionsSets) {
             Optional<Integer> first = set.positionsSetKeys().filter((e) -> e.equals(key)).findFirst();
             if (first.isPresent())
@@ -108,6 +116,17 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
         }
         throw new HappyCubeException(PIECE_POSITION_NOT_FOUND);
     }
+
+    @Override
+    public Map<MatrixUtils.Edge, Integer> getEdgeMagicNumbersKey(int key) {
+        for (OnePiece set : positionsSets) {
+            Optional<Integer> first = set.positionsSetKeys().filter((e) -> e.equals(key)).findFirst();
+            if (first.isPresent())
+                return set.getEdgeMagicNumbers(key);
+        }
+        throw new HappyCubeException(PIECE_POSITION_NOT_FOUND);
+    }
+
 
     /**
      * Checks whether permutation is a perfect cube and writes to file
@@ -118,18 +137,30 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker {
     @Override
     public boolean checkOnePermutation(int[] keys) {
 
-        List<int[][]> matrices = Arrays.stream(keys)
-                .mapToObj(this::getPiecePositionByKey)
-                .collect(Collectors.toList());
-
-        boolean isPerfect = PerfectCubeChecker.isCubePerfect(matrices);
+        boolean isPerfect = cubeChecker.check(keys);
 
         if (isPerfect) {
-            writer.writeSolutionToFile(matrices);
+
+            int[] colors = Arrays.stream(keys).map(i -> i / 10).toArray();
+
+            List<int[][]> matrices = Arrays.stream(keys)
+                    .mapToObj(this::getPiecePositionByKey)
+                    .collect(Collectors.toList());
+
+            int[][][] coloredCube = foldColoredCube(matrices, colors);
+
+            boolean isUnique = checkSolutionUnique.test(coloredCubes, coloredCube);
+
+            if (isUnique) {
+                coloredCubes.add(planeOneToTop(coloredCube));
+                //Matrix3dUtils.coloredCubeOperations(coloredCube);
+                writer.writeSolutionToFile(matrices);
+            }
         }
 
         return isPerfect;
     }
+
 
     @Override
     public void perfectPermutationFound() {

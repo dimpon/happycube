@@ -2,10 +2,10 @@ package com.dimpon.happycube.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static com.dimpon.happycube.utils.MatrixUtils.MATRIX_SIZE;
 
@@ -13,6 +13,7 @@ import static com.dimpon.happycube.utils.MatrixUtils.MATRIX_SIZE;
  * The calss contains util methods for 3d matrices, e.g. int[][][]
  * Of course these methods can be placed in {@link MatrixUtils} but I decided that 200 lines is enough for one class
  */
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Matrix3dUtils {
 
@@ -28,7 +29,7 @@ public class Matrix3dUtils {
      *   5
      * </pre></blockquote>
      *
-     * @param unfolded unfolded form
+     * @param unfolded unfolded plane layout
      * @return cube in 3d array
      */
     public static int[][][] foldTheCube(List<int[][]> unfolded) {
@@ -84,6 +85,161 @@ public class Matrix3dUtils {
             }
         }
 
+        return out;
+    }
+
+
+    /**
+     * The methods builds the "colored" cube. Each pieces matrix uses the number (1-6) instead of 1
+     * e.g. piece 1 use 1, piece 2 use 2 etc.
+     * <p>
+     * The sequence of plane surfaces:
+     * <blockquote><pre>
+     * 0 1 2
+     *   3
+     *   4
+     *   5
+     * </pre></blockquote>
+     *
+     * @param unfolded unfolded plane layout
+     * @return cube in 3d array
+     */
+    public static int[][][] foldColoredCube(List<int[][]> unfolded, int[] colors) {
+        List<int[][]> res = new ArrayList<>(6);
+        for (int i = 0; i < unfolded.size(); i++) {
+            int[][] matrix = unfolded.get(i);
+            res.add(paintMatrix(matrix, colors[i]));
+        }
+
+        return foldTheCube(res);
+    }
+
+    /**
+     * Rotate 3d cube 90 grad clockwise over Z axis
+     * <p>
+     * top, bottom planes are't move
+     * facade > left, left > back, back > right, rght > facade
+     *
+     * @param in inout cube
+     * @return rotated cube
+     */
+    public static int[][][] rotateCubeZ(int[][][] in) {
+        int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
+
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[i] = MatrixUtils.rotateToRight(in[i]);
+        }
+
+        return out;
+    }
+
+    /**
+     * Rotate 3d cube 90 grad over Y axis
+     * <p>
+     * right, left planes are't move
+     * top > facade, facade > bottom, bottom > back, back > top
+     *
+     * @param in inout cube
+     * @return rotated cube
+     */
+    public static int[][][] rotateCubeY(int[][][] in) {
+        int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
+
+
+        //top > facade
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[i][MATRIX_SIZE - 1] = in[0][i];
+        }
+
+        //facade > bottom
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[MATRIX_SIZE - 1][MATRIX_SIZE - 1 - i] = in[i][MATRIX_SIZE - 1];
+        }
+
+        //bottom > back
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[i][0] = in[MATRIX_SIZE - 1][i];
+        }
+
+        //back > top
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[0][i] = in[MATRIX_SIZE - 1 - i][0];
+        }
+
+        //central part
+        for (int i = 1; i < MATRIX_SIZE - 1; i++) {
+            for (int u = 1; u < MATRIX_SIZE - 1; u++) {
+                out[i][u] = in[i][u];
+            }
+        }
+
+        return out;
+    }
+
+    public static int[][][] mirrorCube(int[][][] in) {
+        int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
+
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[MATRIX_SIZE - 1 - i] = in[i];
+        }
+
+        return out;
+    }
+
+
+    public static int[][][] planeOneToTop(int[][][] cube) {
+
+        int top = cube[0][2][2];
+        if (top == 1) {
+            return Arrays.copyOf(cube,MATRIX_SIZE);
+        }
+
+        int front = cube[2][4][2];
+        if (front == 1) {
+            return rotateCubeY(rotateCubeY(rotateCubeY(cube)));
+        }
+
+        int back = cube[2][0][2];
+        if (back == 1) {
+            return rotateCubeY(cube);
+        }
+
+        int left = cube[2][2][0];
+        if (left == 1) {
+            return rotateCubeY(rotateCubeZ(cube));
+        }
+
+        int right = cube[2][2][4];
+        if (right == 1) {
+            return rotateCubeY(rotateCubeY(rotateCubeY(rotateCubeZ(cube))));
+        }
+
+
+        int bottom = cube[4][2][2];
+        if (bottom == 1) {
+            return rotateCubeY(rotateCubeY(cube));
+        }
+
+        return Arrays.copyOf(cube,MATRIX_SIZE);
+
+    }
+
+    /**
+     * Replaces all 1 to color (int).
+     *
+     * @param matrix initial matrix
+     * @param color  int number, imitate color
+     * @return "colored matrix"
+     */
+    public static int[][] paintMatrix(int[][] matrix, int color) {
+        @SuppressWarnings("unchecked")
+        int[][] out = (int[][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE);
+
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            for (int j = 0; j < MATRIX_SIZE; j++) {
+                out[i][j] = matrix[i][j] * color;
+            }
+        }
         return out;
     }
 
@@ -182,6 +338,225 @@ public class Matrix3dUtils {
         return res == 3;
     }
 
+
+    static boolean isMakeSenseToCheckFurtherUsingMagicNumbers(List<Map<MatrixUtils.Edge, Integer>> edges) {
+
+
+        //0-1
+        if (!isTwoEdgesMatch(
+                edges.get(0).get(MatrixUtils.Edge.RIGHT),
+                edges.get(1).get(MatrixUtils.Edge.LEFT))) {
+            return false;
+        }
+
+        //1-2
+        if (!isTwoEdgesMatch(
+                edges.get(1).get(MatrixUtils.Edge.RIGHT),
+                edges.get(2).get(MatrixUtils.Edge.LEFT))) {
+            return false;
+        }
+
+        //1-3
+        if (!isTwoEdgesMatch(
+                edges.get(1).get(MatrixUtils.Edge.BOTTOM),
+                edges.get(3).get(MatrixUtils.Edge.TOP))) {
+            return false;
+        }
+
+        //1-5
+        if (!isTwoEdgesMatch(
+                edges.get(1).get(MatrixUtils.Edge.TOP),
+                edges.get(5).get(MatrixUtils.Edge.BOTTOM))) {
+            return false;
+        }
+
+        //4-3
+        if (!isTwoEdgesMatch(
+                edges.get(4).get(MatrixUtils.Edge.TOP),
+                edges.get(3).get(MatrixUtils.Edge.BOTTOM))) {
+            return false;
+        }
+
+        //4-5
+        if (!isTwoEdgesMatch(
+                edges.get(4).get(MatrixUtils.Edge.BOTTOM),
+                edges.get(5).get(MatrixUtils.Edge.TOP))) {
+            return false;
+        }
+
+        //4-0
+        if (!isTwoEdgesMatch(
+                edges.get(4).get(MatrixUtils.Edge.LEFT),
+                edges.get(0).get(MatrixUtils.Edge.LEFT_REVERSE))) {
+            return false;
+        }
+
+        //4-2
+        if (!isTwoEdgesMatch(
+                edges.get(4).get(MatrixUtils.Edge.RIGHT),
+                edges.get(2).get(MatrixUtils.Edge.RIGHT_REVERSE))) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public static boolean isCubePerfectUsingEdges(List<Map<MatrixUtils.Edge, Integer>> unfolded) {
+
+
+        //1-3
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM_REVERSE),
+                unfolded.get(1).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(3).get(MatrixUtils.Edge.TOP),
+                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM_REVERSE)
+        )) {
+            log.debug("1-3");
+            return false;
+        }
+
+        //0-1
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(5).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(0).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(1).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(3).get(MatrixUtils.Edge.TOP_REVERSE)
+        )) {
+            log.debug("0-1");
+            return false;
+        }
+
+        //1-2
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(5).get(MatrixUtils.Edge.BOTTOM_REVERSE),
+                unfolded.get(2).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(1).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(3).get(MatrixUtils.Edge.TOP)
+        )) {
+            log.debug("1-2");
+            return false;
+        }
+
+        //1-5
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(0).get(MatrixUtils.Edge.TOP_REVERSE),
+                unfolded.get(1).get(MatrixUtils.Edge.TOP),
+                unfolded.get(5).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(2).get(MatrixUtils.Edge.TOP_REVERSE)
+        )) {
+            log.debug("1-5");
+            return false;
+        }
+
+        //3-4
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(3).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(4).get(MatrixUtils.Edge.TOP),
+                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM)
+        )) {
+            log.debug("4-3");
+            return false;
+        }
+
+
+        //4-5
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(0).get(MatrixUtils.Edge.TOP),
+                unfolded.get(4).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(5).get(MatrixUtils.Edge.TOP),
+                unfolded.get(2).get(MatrixUtils.Edge.TOP)
+
+        )) {
+            log.debug("4-5");
+            return false;
+        }
+
+        //4-0
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(3).get(MatrixUtils.Edge.LEFT_REVERSE),
+                unfolded.get(4).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(0).get(MatrixUtils.Edge.LEFT_REVERSE),
+                unfolded.get(5).get(MatrixUtils.Edge.LEFT_REVERSE)
+
+        )) {
+            log.debug("4-0");
+            return false;
+        }
+
+        //4-2
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(3).get(MatrixUtils.Edge.RIGHT_REVERSE),
+                unfolded.get(4).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(2).get(MatrixUtils.Edge.RIGHT_REVERSE),
+                unfolded.get(5).get(MatrixUtils.Edge.RIGHT_REVERSE)
+
+        )) {
+            log.debug("4-2");
+            return false;
+        }
+
+
+        //3-0
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(1).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(3).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(0).get(MatrixUtils.Edge.BOTTOM_REVERSE),
+                unfolded.get(4).get(MatrixUtils.Edge.TOP_REVERSE)
+
+        )) {
+            log.debug("3-0");
+            return false;
+        }
+
+        //3-2
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(1).get(MatrixUtils.Edge.BOTTOM_REVERSE),
+                unfolded.get(3).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(2).get(MatrixUtils.Edge.BOTTOM),
+                unfolded.get(4).get(MatrixUtils.Edge.TOP)
+
+        )) {
+            log.debug("3-2");
+            return false;
+        }
+
+        //5-0
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(4).get(MatrixUtils.Edge.LEFT_REVERSE),
+                unfolded.get(5).get(MatrixUtils.Edge.LEFT),
+                unfolded.get(0).get(MatrixUtils.Edge.TOP),
+                unfolded.get(1).get(MatrixUtils.Edge.LEFT_REVERSE)
+
+        )) {
+            log.debug("5-0");
+            return false;
+        }
+
+        //5-2
+        if (!MatrixUtils.checkOneEdge(
+                unfolded.get(4).get(MatrixUtils.Edge.RIGHT_REVERSE),
+                unfolded.get(5).get(MatrixUtils.Edge.RIGHT),
+                unfolded.get(2).get(MatrixUtils.Edge.TOP_REVERSE),
+                unfolded.get(1).get(MatrixUtils.Edge.RIGHT_REVERSE)
+
+        )) {
+            log.debug("5-2");
+            return false;
+        }
+
+
+        return true;
+    }
+
+
+    static boolean isTwoEdgesMatch(int one, int two) {
+        log.debug(String.format("%5s", Integer.toBinaryString(one)).replace(' ', '0'));
+        log.debug(String.format("%5s", Integer.toBinaryString(two)).replace(' ', '0'));
+        int res = (one & 0b01110) ^ (two & 0b01110);
+        return res == 0b01110;
+    }
 
     /**
      * Method checks whether cube is perfect.
