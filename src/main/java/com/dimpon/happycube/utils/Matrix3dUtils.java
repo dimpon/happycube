@@ -37,7 +37,7 @@ public class Matrix3dUtils {
         int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
 
 
-       int[][] leftPlane = unfolded.get(0);
+        int[][] leftPlane = unfolded.get(0);
 
         for (int i = 0; i < MATRIX_SIZE; i++) {
             for (int j = 0, z = MATRIX_SIZE - 1; j < MATRIX_SIZE; j++, z--) {
@@ -112,6 +112,116 @@ public class Matrix3dUtils {
         }
 
         return foldTheCube(res);
+    }
+
+    /**
+     * Rotate 3d cube 90 grad clockwise over Z axis
+     * <p>
+     * top, bottom planes are't move
+     * facade > left, left > back, back > right, rght > facade
+     *
+     * @param in inout cube
+     * @return rotated cube
+     */
+    public static int[][][] rotateCubeZ(int[][][] in) {
+        int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
+
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[i] = MatrixUtils.rotateToRight(in[i]);
+        }
+
+        return out;
+    }
+
+    /**
+     * Rotate 3d cube 90 grad over Y axis
+     * <p>
+     * right, left planes are't move
+     * top > facade, facade > bottom, bottom > back, back > top
+     *
+     * @param in inout cube
+     * @return rotated cube
+     */
+    public static int[][][] rotateCubeY(int[][][] in) {
+        int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
+
+
+        //top > facade
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[i][MATRIX_SIZE - 1] = in[0][i];
+        }
+
+        //facade > bottom
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[MATRIX_SIZE - 1][MATRIX_SIZE - 1 - i] = in[i][MATRIX_SIZE - 1];
+        }
+
+        //bottom > back
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[i][0] = in[MATRIX_SIZE - 1][i];
+        }
+
+        //back > top
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[0][i] = in[MATRIX_SIZE - 1 - i][0];
+        }
+
+        //central part
+        for (int i = 1; i < MATRIX_SIZE - 1; i++) {
+            for (int u = 1; u < MATRIX_SIZE - 1; u++) {
+                out[i][u] = in[i][u];
+            }
+        }
+
+        return out;
+    }
+
+    public static int[][][] mirrorCube(int[][][] in) {
+        int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
+
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            out[MATRIX_SIZE - 1 - i] = in[i];
+        }
+
+        return out;
+    }
+
+
+    public static int[][][] planeOneToTop(int[][][] cube) {
+
+        int top = cube[0][2][2];
+        if (top == 1) {
+            return Arrays.copyOf(cube,MATRIX_SIZE);
+        }
+
+        int front = cube[2][4][2];
+        if (front == 1) {
+            return rotateCubeY(rotateCubeY(rotateCubeY(cube)));
+        }
+
+        int back = cube[2][0][2];
+        if (back == 1) {
+            return rotateCubeY(cube);
+        }
+
+        int left = cube[2][2][0];
+        if (left == 1) {
+            return rotateCubeY(rotateCubeZ(cube));
+        }
+
+        int right = cube[2][2][4];
+        if (right == 1) {
+            return rotateCubeY(rotateCubeY(rotateCubeY(rotateCubeZ(cube))));
+        }
+
+
+        int bottom = cube[4][2][2];
+        if (bottom == 1) {
+            return rotateCubeY(rotateCubeY(cube));
+        }
+
+        return Arrays.copyOf(cube,MATRIX_SIZE);
+
     }
 
     /**

@@ -4,6 +4,7 @@ package com.dimpon.happycube.pieces;
 import com.dimpon.happycube.exception.HappyCubeException;
 import com.dimpon.happycube.loader.DataLoader;
 import com.dimpon.happycube.pieces.helpers.*;
+import com.dimpon.happycube.utils.Matrix3dUtils;
 import com.dimpon.happycube.utils.MatrixUtils;
 import com.dimpon.happycube.utils.PerfectCubeCheckerUtils;
 import com.dimpon.happycube.write.SolutionWriter;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.*;
+import static com.dimpon.happycube.utils.Matrix3dUtils.*;
 
 /**
  * Main class, manage solutions finding.
@@ -24,7 +26,7 @@ import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.*
  * 2. Start searching - find cartesian product and then for every combination run permutation finding in parallel.
  */
 @Slf4j
-public class MainProcessorImpl implements MainProcessor, PermutationChecker,PiecesAwareness {
+public class MainProcessorImpl implements MainProcessor, PermutationChecker, PiecesAwareness {
 
 
     private final DataLoader loader;
@@ -34,6 +36,8 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker,Piec
     private boolean findFirstSolutionOnly = false;
 
     private volatile boolean continueSearch = true;
+
+    private List<int[][][]> coloredCubes = new ArrayList<>();
 
     @Singular("position")
     private List<OnePiece> positionsSets;
@@ -133,15 +137,25 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker,Piec
     @Override
     public boolean checkOnePermutation(int[] keys) {
 
-      boolean isPerfect = cubeChecker.check(keys);
+        boolean isPerfect = cubeChecker.check(keys);
 
         if (isPerfect) {
+
+            int[] colors = Arrays.stream(keys).map(i -> i / 10).toArray();
 
             List<int[][]> matrices = Arrays.stream(keys)
                     .mapToObj(this::getPiecePositionByKey)
                     .collect(Collectors.toList());
 
-            writer.writeSolutionToFile(matrices);
+            int[][][] coloredCube = foldColoredCube(matrices, colors);
+
+            boolean isUnique = checkSolutionUnique.test(coloredCubes, coloredCube);
+
+            if (isUnique) {
+                coloredCubes.add(planeOneToTop(coloredCube));
+                //Matrix3dUtils.coloredCubeOperations(coloredCube);
+                writer.writeSolutionToFile(matrices);
+            }
         }
 
         return isPerfect;

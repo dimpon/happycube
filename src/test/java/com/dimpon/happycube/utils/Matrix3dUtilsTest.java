@@ -173,11 +173,80 @@ public class Matrix3dUtilsTest {
 
         Assert.assertTrue(Arrays.deepEquals(coloredCube[0], out[0]));
         Assert.assertTrue(Arrays.deepEquals(coloredCube[1], out[1]));
-
-
-        //todo need to make test model of folded colored cube
-
+        Assert.assertTrue(Arrays.deepEquals(coloredCube[2], out[2]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCube[3], out[3]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCube[4], out[4]));
     }
+
+    @Test
+    public void testRotateColoredCubeZ() throws Exception {
+
+        List<int[][]> unfolded = new ArrayList<>(6);
+        unfolded.add(leftPlaneReal);
+        unfolded.add(topPlaneReal);
+        unfolded.add(rightPlaneReal);
+
+        unfolded.add(frontPlaneReal);
+        unfolded.add(bottomPlaneReal);
+        unfolded.add(backPlaneReal);
+
+        int[][][] out = Matrix3dUtils.foldColoredCube(unfolded, new int[]{1, 2, 3, 4, 5, 6});
+
+        out = Matrix3dUtils.rotateCubeZ(out);
+
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedZ[0], out[0]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedZ[1], out[1]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedZ[2], out[2]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedZ[3], out[3]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedZ[4], out[4]));
+    }
+
+    @Test
+    public void testRotateColoredCubeY() throws Exception {
+
+        List<int[][]> unfolded = new ArrayList<>(6);
+        unfolded.add(leftPlaneReal);
+        unfolded.add(topPlaneReal);
+        unfolded.add(rightPlaneReal);
+
+        unfolded.add(frontPlaneReal);
+        unfolded.add(bottomPlaneReal);
+        unfolded.add(backPlaneReal);
+
+        int[][][] out = Matrix3dUtils.foldColoredCube(unfolded, new int[]{1, 2, 3, 4, 5, 6});
+
+        out = Matrix3dUtils.rotateCubeY(out);
+
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedY[0], out[0]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedY[1], out[1]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedY[2], out[2]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedY[3], out[3]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeRotatedY[4], out[4]));
+    }
+
+    @Test
+    public void testMorrowColoredCube() throws Exception {
+
+        List<int[][]> unfolded = new ArrayList<>(6);
+        unfolded.add(leftPlaneReal);
+        unfolded.add(topPlaneReal);
+        unfolded.add(rightPlaneReal);
+
+        unfolded.add(frontPlaneReal);
+        unfolded.add(bottomPlaneReal);
+        unfolded.add(backPlaneReal);
+
+        int[][][] out = Matrix3dUtils.foldColoredCube(unfolded, new int[]{1, 2, 3, 4, 5, 6});
+
+        out = Matrix3dUtils.mirrorCube(out);
+
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeMirrored[0], out[0]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeMirrored[1], out[1]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeMirrored[2], out[2]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeMirrored[3], out[3]));
+        Assert.assertTrue(Arrays.deepEquals(coloredCubeMirrored[4], out[4]));
+    }
+
 
     private void printTheCube(int[][][] cube) {
 
@@ -222,9 +291,9 @@ public class Matrix3dUtilsTest {
 
     @Test
     public void testIsTwoEdgesMatchInt() throws Exception {
-        Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(0b11010,0b10101));
-        Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(0b10011,0b11101));
-        Assert.assertFalse(Matrix3dUtils.isTwoEdgesMatch(0b10111,0b11101));
+        Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(0b11010, 0b10101));
+        Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(0b10011, 0b11101));
+        Assert.assertFalse(Matrix3dUtils.isTwoEdgesMatch(0b10111, 0b11101));
     }
 
 
