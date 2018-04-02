@@ -13,6 +13,7 @@ import lombok.Singular;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,9 +36,11 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker, Pie
 
     private boolean findFirstSolutionOnly = false;
 
+    private boolean findUniqueSolutionsOnly = true;
+
     private volatile boolean continueSearch = true;
 
-    private List<int[][][]> coloredCubes = new ArrayList<>();
+    private final List<int[][][]> coloredCubes = new ArrayList<>();
 
     @Singular("position")
     private List<OnePiece> positionsSets;
@@ -45,10 +48,11 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker, Pie
     private PerfectCubeChecker cubeChecker;
 
     @Builder
-    public MainProcessorImpl(DataLoader loader, SolutionWriter writer, boolean findFirstSolutionOnly, List<OnePiece> positionsSets, BiPredicate<List<int[][][]>, int[][][]> checkSolutionUnique) {
+    public MainProcessorImpl(DataLoader loader, SolutionWriter writer, boolean findFirstSolutionOnly, boolean findUniqueSolutionsOnly, List<OnePiece> positionsSets, BiPredicate<List<int[][][]>, int[][][]> checkSolutionUnique) {
         this.loader = loader;
         this.writer = writer;
         this.findFirstSolutionOnly = findFirstSolutionOnly;
+        this.findUniqueSolutionsOnly = findUniqueSolutionsOnly;
         this.positionsSets = positionsSets;
         this.checkSolutionUnique = checkSolutionUnique;
 
@@ -58,7 +62,6 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker, Pie
 
     /**
      * contains logic for checking is solution unique.
-     * todo not used now
      */
     private BiPredicate<List<int[][][]>, int[][][]> checkSolutionUnique;
 
@@ -141,24 +144,35 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker, Pie
 
         if (isPerfect) {
 
-            int[] colors = Arrays.stream(keys).map(i -> i / 10).toArray();
-
             List<int[][]> matrices = Arrays.stream(keys)
                     .mapToObj(this::getPiecePositionByKey)
                     .collect(Collectors.toList());
 
-            int[][][] coloredCube = foldColoredCube(matrices, colors);
+            if (findUniqueSolutionsOnly) {
+                checkUniquenessAndWriteToFile(keys, matrices);
+            } else {
+                writer.writeSolutionToFile(matrices);
+            }
+        }
 
+        return isPerfect;
+    }
+
+    private void checkUniquenessAndWriteToFile(int[] keys, List<int[][]> matrices) {
+        int[] colors = Arrays.stream(keys).map(i -> i / 10).toArray();
+
+        int[][][] coloredCube = foldColoredCube(matrices, colors);
+
+        //may be not the best idea to manage multi thread access to coloredCubes
+        //but it is reinforced concrete.
+        synchronized (coloredCubes) {
             boolean isUnique = checkSolutionUnique.test(coloredCubes, coloredCube);
-
             if (isUnique) {
                 coloredCubes.add(planeOneToTop(coloredCube));
                 //Matrix3dUtils.coloredCubeOperations(coloredCube);
                 writer.writeSolutionToFile(matrices);
             }
         }
-
-        return isPerfect;
     }
 
 

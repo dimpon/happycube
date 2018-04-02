@@ -22,6 +22,12 @@ public class HappyCube {
 
         long start = System.currentTimeMillis();
 
+        if(args.length<8){
+            log.info("Usage: <input files directory> <input files prefix> <input files extension> <solutions directory> <solutions files prefix> <solutions files extension> <findFirstSolutionOnly (true/false)> <findUniqueSolutionsOnly (true/false)>");
+            System.exit(1);
+
+        }
+
         Objects.requireNonNull(args[0], "specify input files directory [0]");
         Objects.requireNonNull(args[1], "specify input files prefix [1]");
         Objects.requireNonNull(args[2], "specify input files extension [2]");
@@ -31,6 +37,8 @@ public class HappyCube {
         Objects.requireNonNull(args[5], "specify solutions files extension [5]");
 
         Objects.requireNonNull(args[6], "specify findFirstSolutionOnly (true/false) [6]");
+
+        Objects.requireNonNull(args[7], "specify findUniqueSolutionsOnly (true/false) [7]");
 
         log.info(args[0]+"/"+args[1]+"*."+args[2]+" >> "+args[3]+"/"+args[4]+"*."+args[5]);
         log.info("FindFirstSolutionOnly="+args[6]);
@@ -55,6 +63,7 @@ public class HappyCube {
                 .loader(loader)
                 .writer(writer)
                 .findFirstSolutionOnly(Boolean.parseBoolean(args[6]))
+                .findUniqueSolutionsOnly(Boolean.parseBoolean(args[7]))
                 .positionsSets(sets.collect(Collectors.toList()))
                 .build();
 
