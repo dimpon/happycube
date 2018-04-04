@@ -63,7 +63,7 @@ public class DataLoaderTest {
 
         DataLoaderImpl loader2 = DataLoaderImpl
                 .builder()
-                .path("src/test/resources")
+                .path("./src/test/resources")
                 .prefix("wrong2")
                 .extension("piece")
                 .build();

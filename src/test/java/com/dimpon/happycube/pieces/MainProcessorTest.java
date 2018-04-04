@@ -42,7 +42,7 @@ public class MainProcessorTest {
 
         DataLoaderImpl loader = DataLoaderImpl
                 .builder()
-                .path("src/test/resources")
+                .path("./src/test/resources")
                 .prefix("blue")
                 .extension("piece")
                 .build();
