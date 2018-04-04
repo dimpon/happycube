@@ -28,7 +28,7 @@ public class DataLoaderTest {
         //Act
         DataLoaderImpl loader = DataLoaderImpl
                 .builder()
-                .path("src/test/resources")
+                .path("./src/test/resources")
                 .prefix("blue")
                 .extension("piece")
                 .build();
@@ -49,7 +49,7 @@ public class DataLoaderTest {
 
         DataLoaderImpl loader1 = DataLoaderImpl
                 .builder()
-                .path("src/test/resources")
+                .path("./src/test/resources")
                 .prefix("wrong1")
                 .extension("piece")
                 .build();
