@@ -196,7 +196,7 @@ public final class MatrixUtils {
                 edges[1], edges[2],
                 (edges[3] & 0b00001));
 
-        return 31 == r;
+        return 0b11111 == r;
     }
 
     public enum Edge {
