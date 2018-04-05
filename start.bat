@@ -1,7 +1,8 @@
 @Echo off
 
 
-
+rem Usage: <input files dir> <input files pref> <input files ext> <solutions dir> <solutions files pref> <solutions files ext> 
+rem <findFirstSolutionOnly (true/false)> <findUniqueSolutionsOnly (true/false)>
 
 java  -jar ./target/happycube-spring-boot.jar ./data blue txt ./solutions/blue solution sol false true
 

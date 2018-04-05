@@ -22,7 +22,7 @@ import static com.dimpon.happycube.utils.MatrixUtils.*;
 /**
  * Loads the files content to matrices. Empty spaces(32) are 0, others symbols are 1.
  * If file contains more then 5 lines and more 5 symbols per line, the extra symbols are ignored.
- *
+ * <p>
  * todo might be not a good idea to "hardcode" everywhere the matrix size 5x5, but we collect cube, though?
  */
 @Slf4j
@@ -52,7 +52,7 @@ public class DataLoaderImpl implements DataLoader {
 
     @Override
     public void populate(OnePiece piece) {
-        log.info("Populate piece, num:"+piece.getOrderNumber());
+        log.info("Populate piece, num:" + piece.getOrderNumber());
         piece.populate(initialData.get(piece.getOrderNumber()));
     }
 
@@ -60,7 +60,11 @@ public class DataLoaderImpl implements DataLoader {
     public void loadData() {
         log.info("Load initial data...");
         try (Stream<Path> stream = Files.find(Paths.get(path), 1, matcherForFilesNames)) {
-            stream.forEach(this::readOneFile);
+            stream
+                    .peek(p -> log.info("before sort:" + p.toString()))
+                    .sorted(Comparator.naturalOrder())
+                    .peek(p -> log.info("after sort:" + p.toString()))
+                    .forEach(this::readOneFile);
         }
     }
 
@@ -78,7 +82,7 @@ public class DataLoaderImpl implements DataLoader {
                 .map(e -> Arrays.copyOf(e, MATRIX_SIZE))
                 .toArray(int[][]::new);
 
-        if(!isCentralPartOk(matrix) || !isCornersOk(matrix)){
+        if (!isCentralPartOk(matrix) || !isCornersOk(matrix)) {
             throw new HappyCubeException(HappyCubeException.ExceptionsType.WRONG_INIT_DATA);
         }
 
