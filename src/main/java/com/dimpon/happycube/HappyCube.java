@@ -5,7 +5,7 @@ import com.dimpon.happycube.loader.DataLoader;
 import com.dimpon.happycube.pieces.OnePiece;
 import com.dimpon.happycube.pieces.OnePieceImpl;
 import com.dimpon.happycube.pieces.MainProcessorImpl;
-import com.dimpon.happycube.pieces.helpers.SolutionUniqueChecker;
+import com.dimpon.happycube.pieces.helpers.SolutionUniqueCheckerImpl;
 import com.dimpon.happycube.write.SolutionWriter;
 import com.dimpon.happycube.write.SolutionWriterImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +59,7 @@ public class HappyCube {
         Stream<OnePiece> sets = IntStream.range(0,6).mapToObj(OnePieceImpl::new);
 
         MainProcessorImpl processor = MainProcessorImpl.builder()
-                .checkSolutionUnique(new SolutionUniqueChecker())
+                .checkSolutionUnique(new SolutionUniqueCheckerImpl())
                 .loader(loader)
                 .writer(writer)
                 .findFirstSolutionOnly(Boolean.parseBoolean(args[6]))

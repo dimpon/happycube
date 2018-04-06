@@ -40,7 +40,6 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker, Pie
 
     private volatile boolean continueSearch = true;
 
-    private final List<int[][][]> coloredCubes = new ArrayList<>();
 
     @Singular("position")
     private List<OnePiece> positionsSets;
@@ -48,7 +47,7 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker, Pie
     private PerfectCubeChecker cubeChecker;
 
     @Builder
-    public MainProcessorImpl(DataLoader loader, SolutionWriter writer, boolean findFirstSolutionOnly, boolean findUniqueSolutionsOnly, List<OnePiece> positionsSets, BiPredicate<List<int[][][]>, int[][][]> checkSolutionUnique) {
+    public MainProcessorImpl(DataLoader loader, SolutionWriter writer, boolean findFirstSolutionOnly, boolean findUniqueSolutionsOnly, List<OnePiece> positionsSets, SolutionUniqueChecker checkSolutionUnique) {
         this.loader = loader;
         this.writer = writer;
         this.findFirstSolutionOnly = findFirstSolutionOnly;
@@ -63,7 +62,7 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker, Pie
     /**
      * contains logic for checking is solution unique.
      */
-    private BiPredicate<List<int[][][]>, int[][][]> checkSolutionUnique;
+    private SolutionUniqueChecker checkSolutionUnique;
 
     @Override
     public void prepareData() {
@@ -163,16 +162,11 @@ public class MainProcessorImpl implements MainProcessor, PermutationChecker, Pie
 
         int[][][] coloredCube = foldColoredCube(matrices, colors);
 
-        //may be not the best idea to manage multi thread access to coloredCubes
-        //but it is reinforced concrete.
-        synchronized (coloredCubes) {
-            boolean isUnique = checkSolutionUnique.test(coloredCubes, coloredCube);
-            if (isUnique) {
-                coloredCubes.add(planeOneToTop(coloredCube));
-                //Matrix3dUtils.coloredCubeOperations(coloredCube);
-                writer.writeSolutionToFile(matrices);
-            }
+        boolean isUnique = checkSolutionUnique.check(coloredCube);
+        if (isUnique) {
+            writer.writeSolutionToFile(matrices);
         }
+
     }
 
 
