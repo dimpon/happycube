@@ -174,6 +174,47 @@ public final class MatrixUtils {
 
     }
 
+    @FunctionalInterface
+    interface FindEdgePixel {
+        int find(int index);
+    }
+
+    /**
+     * Method checks whether piece has a flat side.
+     * Might be used in Challenge #2
+     *
+     * @return true or false
+     */
+    public static boolean hasFlatSide(int[][] in) {
+
+
+        if (isOneEdgeHasFlatSide(i -> in[0][i])) {
+            return true;
+        }
+
+        if (isOneEdgeHasFlatSide(i -> in[i][0])) {
+            return true;
+        }
+
+        if (isOneEdgeHasFlatSide(i -> in[MATRIX_SIZE - 1][i])) {
+            return true;
+        }
+
+        if (isOneEdgeHasFlatSide(i -> in[i][MATRIX_SIZE - 1])) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    private static boolean isOneEdgeHasFlatSide(FindEdgePixel func) {
+        int sum = 0;
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            sum = sum + func.find(i);
+        }
+        return (sum == MATRIX_SIZE);
+    }
 
 
     /*

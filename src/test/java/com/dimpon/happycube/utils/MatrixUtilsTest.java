@@ -238,6 +238,59 @@ public class MatrixUtilsTest {
 
     }
 
+    @Test
+    public void testHasFlatSide() throws Exception {
+        //Arrange
+        int[][] good = new int[][]{
+                {1, 1, 0, 1, 1},
+                {1, 1, 1, 1, 0},
+                {1, 1, 1, 1, 0},
+                {0, 1, 1, 1, 1},
+                {1, 0, 0, 0, 1}
+        };
+
+
+        int[][] bad1 = new int[][]{
+                {1, 1, 1, 0, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1}
+        };
+
+        int[][] bad2 = new int[][]{
+                {1, 1, 1, 1, 1},
+                {0, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1}
+        };
+
+        int[][] bad3 = new int[][]{
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 0},
+                {1, 1, 1, 1, 1}
+        };
+
+        int[][] bad4 = new int[][]{
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 1, 1, 0, 1}
+        };
+
+        //Act & Assert
+        Assert.assertFalse(MatrixUtils.hasFlatSide(good));
+        Assert.assertTrue(MatrixUtils.hasFlatSide(bad1));
+        Assert.assertTrue(MatrixUtils.hasFlatSide(bad2));
+        Assert.assertTrue(MatrixUtils.hasFlatSide(bad3));
+        Assert.assertTrue(MatrixUtils.hasFlatSide(bad4));
+
+    }
+
 
     @Test
     public void testCalculateIntRepresentationOfOneEdge() throws Exception {
@@ -251,14 +304,14 @@ public class MatrixUtilsTest {
         };
 
 
-        Assert.assertEquals(0b11101, MatrixUtils.edge(matrix,Edge.TOP));
-        Assert.assertEquals(0b10111, MatrixUtils.edge(matrix,Edge.TOP_REVERSE));
-        Assert.assertEquals(0b00111, MatrixUtils.edge(matrix,Edge.BOTTOM));
-        Assert.assertEquals(0b11100, MatrixUtils.edge(matrix,Edge.BOTTOM_REVERSE));
-        Assert.assertEquals(0b10110, MatrixUtils.edge(matrix,Edge.LEFT));
-        Assert.assertEquals(0b01101, MatrixUtils.edge(matrix,Edge.LEFT_REVERSE));
-        Assert.assertEquals(0b11001, MatrixUtils.edge(matrix,Edge.RIGHT));
-        Assert.assertEquals(0b10011, MatrixUtils.edge(matrix,Edge.RIGHT_REVERSE));
+        Assert.assertEquals(0b11101, MatrixUtils.edge(matrix, Edge.TOP));
+        Assert.assertEquals(0b10111, MatrixUtils.edge(matrix, Edge.TOP_REVERSE));
+        Assert.assertEquals(0b00111, MatrixUtils.edge(matrix, Edge.BOTTOM));
+        Assert.assertEquals(0b11100, MatrixUtils.edge(matrix, Edge.BOTTOM_REVERSE));
+        Assert.assertEquals(0b10110, MatrixUtils.edge(matrix, Edge.LEFT));
+        Assert.assertEquals(0b01101, MatrixUtils.edge(matrix, Edge.LEFT_REVERSE));
+        Assert.assertEquals(0b11001, MatrixUtils.edge(matrix, Edge.RIGHT));
+        Assert.assertEquals(0b10011, MatrixUtils.edge(matrix, Edge.RIGHT_REVERSE));
 
 
     }
@@ -297,14 +350,6 @@ public class MatrixUtilsTest {
                         0b11011));
 
     }
-
-
-
-
-
-
-
-
 
 
 }
