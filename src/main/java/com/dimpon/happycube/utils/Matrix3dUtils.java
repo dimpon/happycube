@@ -118,7 +118,7 @@ public class Matrix3dUtils {
      * Rotate 3d cube 90 grad clockwise over Z axis
      * <p>
      * top, bottom planes are't move
-     * facade > left, left > back, back > right, rght > facade
+     * facade > left, left > back, back > right, right > facade
      *
      * @param in inout cube
      * @return rotated cube
@@ -187,6 +187,12 @@ public class Matrix3dUtils {
     }
 
 
+    /**
+     * Rotate the 3d cube in order that plane with 1 pixels will b eon top
+     *
+     * @param cube colored cube
+     * @return colored cobe with 1 on top
+     */
     public static int[][][] planeOneToTop(int[][][] cube) {
 
         int top = cube[0][2][2];
@@ -231,7 +237,7 @@ public class Matrix3dUtils {
      * @param color  int number, imitate color
      * @return "colored matrix"
      */
-    public static int[][] paintMatrix(int[][] matrix, int color) {
+     static int[][] paintMatrix(int[][] matrix, int color) {
         @SuppressWarnings("unchecked")
         int[][] out = (int[][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE);
 

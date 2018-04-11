@@ -127,7 +127,6 @@ public final class MatrixUtils {
     }
 
 
-
     private static final int[][] pattern = new int[][]{
             {0, 0, 0, 0, 0},
             {0, 1, 1, 1, 0},
@@ -177,6 +176,10 @@ public final class MatrixUtils {
 
 
 
+    /*
+    The methods below are used for algorithm B, based on edges checking.
+    It turned out that performance is worse.
+     */
 
 
     private static int one(int a, int b, int c, int d) {
@@ -230,10 +233,10 @@ public final class MatrixUtils {
      * Calculates the magic number for piece edge (basically the int representation of binary edge)
      *
      * @param matrix piece
-     * @param edge wich edge to calculate
+     * @param edge   wich edge to calculate
      * @return int representation of binary edge
      */
-     static int edge(int[][] matrix, Edge edge) {
+    static int edge(int[][] matrix, Edge edge) {
 
         int res = 0;
 
