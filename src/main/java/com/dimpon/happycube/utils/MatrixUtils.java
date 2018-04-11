@@ -180,7 +180,7 @@ public final class MatrixUtils {
     }
 
     /**
-     * Method checks whether piece has a flat side.
+     * Method checks whether piece has a flat side. Flat side is bad.
      * Might be used in Challenge #2
      *
      * @return true or false
