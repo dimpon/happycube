@@ -61,9 +61,7 @@ public class DataLoaderImpl implements DataLoader {
         log.info("Load initial data...");
         try (Stream<Path> stream = Files.find(Paths.get(path), 1, matcherForFilesNames)) {
             stream
-                    .peek(p -> log.info("before sort:" + p.toString()))
                     .sorted(Comparator.naturalOrder())
-                    .peek(p -> log.info("after sort:" + p.toString()))
                     .forEach(this::readOneFile);
         }
     }

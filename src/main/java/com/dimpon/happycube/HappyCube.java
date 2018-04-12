@@ -2,6 +2,7 @@ package com.dimpon.happycube;
 
 import com.dimpon.happycube.loader.DataLoaderImpl;
 import com.dimpon.happycube.loader.DataLoader;
+import com.dimpon.happycube.pieces.MainProcessor;
 import com.dimpon.happycube.pieces.OnePiece;
 import com.dimpon.happycube.pieces.OnePieceImpl;
 import com.dimpon.happycube.pieces.MainProcessorImpl;
@@ -58,7 +59,7 @@ public class HappyCube {
 
         Stream<OnePiece> sets = IntStream.range(0,6).mapToObj(OnePieceImpl::new);
 
-        MainProcessorImpl processor = MainProcessorImpl.builder()
+        MainProcessor processor = MainProcessorImpl.builder()
                 .checkSolutionUnique(new SolutionUniqueCheckerImpl())
                 .loader(loader)
                 .writer(writer)

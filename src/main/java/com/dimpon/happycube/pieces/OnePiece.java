@@ -34,8 +34,20 @@ public interface OnePiece {
      */
     Stream<Integer> positionsSetKeys();
 
+    /**
+     * Return piece variant by code
+     *
+     * @param key special code of piece variant
+     * @return piece variant, matrix 5x5
+     */
     int[][] getPositionByKey(int key);
 
+    /**
+     * Returns integer representation of edges. Used for Algorithm B
+     *
+     * @param key special code of piece variant
+     * @return Map of 8 int representation of edges
+     */
     Map<MatrixUtils.Edge,Integer> getEdgeMagicNumbers(int key);
 
 

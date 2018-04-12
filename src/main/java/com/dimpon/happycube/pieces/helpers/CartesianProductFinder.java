@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 /**
  * Finds combinations of all positions of every planes.
  */
-public  class CartesianProductFinder {
+public class CartesianProductFinder {
 
     public CartesianProductFinder(List<int[]> input) {
         this.input = input;

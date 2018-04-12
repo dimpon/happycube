@@ -154,6 +154,26 @@ public final class MatrixUtils {
     }
 
     /**
+     * Is generated piece meets basic requirements
+     *
+     * @return true or false
+     */
+    public static boolean isGeneratedPieceOk(int[][] in) {
+
+        if (!isCornersOk(in)) {
+            return false;
+        }
+        if (!isCentralPartOk(in)) {
+            return false;
+        }
+        if (hasFlatSide(in)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Method checks whether corners are not hanging in air.
      * Might be used in Challenge #2
      *

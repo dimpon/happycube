@@ -7,6 +7,7 @@ import com.dimpon.happycube.pieces.helpers.PermutationsFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
+import sun.nio.cs.ext.MacArabic;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +21,49 @@ public class CartesianProductAndPermutationsFindersTest {
 
 
     @Test
+    public void findCombinations2() throws Exception {
+
+        //Assert
+        List<int[]> input = new ArrayList<int[]>(3) {{
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+            add(new int[]{1, 0});
+        }};
+
+        //Act
+        CartesianProductFinder finder = new CartesianProductFinder(input);
+        List<int[]> combinations = finder.combinations().collect(Collectors.toList());
+
+
+        //Assert
+        Assert.assertEquals((int)Math.pow(2,16), combinations.size());
+
+
+        Set<String> collect = combinations.stream()
+                .map(e -> Arrays.stream(e)
+                        .mapToObj(Integer::toString)
+                        .collect(Collectors.joining(",")))
+                .collect(Collectors.toSet());
+
+
+        collect.forEach(log::debug);
+
+    }
+
+        @Test
     public void findCombinations() throws Exception {
 
         //Assert
