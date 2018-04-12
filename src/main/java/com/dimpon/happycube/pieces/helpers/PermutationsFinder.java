@@ -1,20 +1,21 @@
 package com.dimpon.happycube.pieces.helpers;
 
-import com.dimpon.happycube.pieces.PermutationChecker;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 
 
 /**
- * Finds all permutations of input keys array and call {@link PermutationChecker} for each permutation
+ * Finds all permutations of input keys array and call {@link PerfectCubeChecker} for each permutation
  */
 @Slf4j
 public  class PermutationsFinder {
 
-    private PermutationChecker checker;
+    private PerfectCubeChecker checker;
 
-    public PermutationsFinder(PermutationChecker checker) {
+    private volatile boolean needToCheckFurther = true;
+
+    public PermutationsFinder(PerfectCubeChecker checker) {
         this.checker = checker;
     }
 
@@ -24,15 +25,11 @@ public  class PermutationsFinder {
 
     private void solution(int[] keys, int index) {
 
-        if(!checker.continueSearch())
+        if(!needToCheckFurther)
             return;
 
         if (index == keys.length - 1) {
-            boolean perfect = this.checker.checkOnePermutation(keys);
-
-            if(perfect){
-                checker.perfectPermutationFound();
-            }
+            needToCheckFurther = this.checker.checkAndTellNeedToSearchFurther(keys);
         }
 
         for (int i = index; i < keys.length; i++) {

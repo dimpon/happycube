@@ -39,11 +39,11 @@ public class SolutionWriterImpl implements SolutionWriter {
     /**
      * {@inheritDoc}
      * <p>
-     *
      */
     @Override
     @SneakyThrows(IOException.class)
     public void writeSolutionToFile(List<int[][]> unfolded) {
+        log.debug("Write to file...");
 
         Stream<String> stream = generateFileContent(unfolded);
 

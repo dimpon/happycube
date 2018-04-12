@@ -1,17 +1,15 @@
 package com.dimpon.happycube.loader;
 
-import com.dimpon.happycube.pieces.MainProcessorImpl;
-import com.dimpon.happycube.pieces.PermutationChecker;
 import com.dimpon.happycube.pieces.helpers.CartesianProductFinder;
+import com.dimpon.happycube.pieces.helpers.PerfectCubeChecker;
+import com.dimpon.happycube.pieces.helpers.PerfectCubeCheckerImpl;
 import com.dimpon.happycube.pieces.helpers.PermutationsFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
-import sun.nio.cs.ext.MacArabic;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -49,21 +47,21 @@ public class CartesianProductAndPermutationsFindersTest {
 
 
         //Assert
-        Assert.assertEquals((int)Math.pow(2,16), combinations.size());
+        Assert.assertEquals((int) Math.pow(2, 16), combinations.size());
 
 
-        Set<String> collect = combinations.stream()
+        /*Set<String> collect = combinations.stream()
                 .map(e -> Arrays.stream(e)
                         .mapToObj(Integer::toString)
                         .collect(Collectors.joining(",")))
                 .collect(Collectors.toSet());
 
 
-        collect.forEach(log::debug);
+        collect.forEach(log::debug);*/
 
     }
 
-        @Test
+    @Test
     public void findCombinations() throws Exception {
 
         //Assert
@@ -86,7 +84,7 @@ public class CartesianProductAndPermutationsFindersTest {
                         .collect(Collectors.joining("-")))
                 .collect(Collectors.toSet());
 
-        //check that after conversion to string and placing in set the size is the same
+        //checkAndTellNeedToSearchFurther that after conversion to string and placing in set the size is the same
         Assert.assertEquals(36, collect.size());
 
         //CartesianProduct with arrays looping
@@ -103,9 +101,10 @@ public class CartesianProductAndPermutationsFindersTest {
     public void findPermutations() throws Exception {
 
         //Arrange
-        PermutationChecker checker = mock(PermutationChecker.class);
-        when(checker.checkOnePermutation(any())).thenReturn(false);
-        when(checker.continueSearch()).thenReturn(true);
+        PerfectCubeChecker checker = mock(PerfectCubeChecker.class);
+
+        //when(checker.checkOnePermutation(any())).thenReturn(false);
+        when(checker.checkAndTellNeedToSearchFurther(any())).thenReturn(true);
 
         PermutationsFinder finder = new PermutationsFinder(checker);
 
@@ -114,20 +113,20 @@ public class CartesianProductAndPermutationsFindersTest {
         finder.permutations(new int[]{11, 12, 13, 14, 15});
         finder.permutations(new int[]{11, 12, 13, 14, 15, 16});
 
-        verify(checker, times((24 + 120 + 720))).checkOnePermutation(any());
+        verify(checker, times((24 + 120 + 720))).checkAndTellNeedToSearchFurther(any());
     }
 
     @Test
     public void testFindFirstPermutations() throws Exception {
 
         //Arrange
-        PermutationChecker obj = MainProcessorImpl.builder()
+        PerfectCubeChecker obj = PerfectCubeCheckerImpl.builder()
                 .findFirstSolutionOnly(true)
                 .build();
 
-        PermutationChecker checker = spy(obj);
+        PerfectCubeChecker checker = spy(obj);
 
-        doReturn(true).when(checker).checkOnePermutation(any());
+        doReturn(false).when(checker).checkAndTellNeedToSearchFurther(any());
 
         PermutationsFinder finder = new PermutationsFinder(checker);
 
@@ -135,28 +134,28 @@ public class CartesianProductAndPermutationsFindersTest {
         finder.permutations(new int[]{11, 12, 13, 14});
 
         //Assert
-        verify(checker, times(1)).checkOnePermutation(any());
+        verify(checker, times(1)).checkAndTellNeedToSearchFurther(any());
     }
 
     @Test
     public void testStopSearchInTheMiddle() throws Exception {
 
         //Arrange
-        PermutationChecker obj = MainProcessorImpl.builder()
+        PerfectCubeChecker obj = PerfectCubeCheckerImpl.builder()
                 .findFirstSolutionOnly(true)
                 .build();
 
-        PermutationChecker checker = spy(obj);
+        PerfectCubeChecker checker = spy(obj);
 
-        doReturn(false).when(checker).checkOnePermutation(any());
-        doReturn(true).when(checker).checkOnePermutation(eq(new int[]{11, 13, 14, 12}));
+        doReturn(true).when(checker).checkAndTellNeedToSearchFurther(any());
+        doReturn(false).when(checker).checkAndTellNeedToSearchFurther(eq(new int[]{11, 13, 14, 12}));
 
         PermutationsFinder finder = new PermutationsFinder(checker);
 
         //Act & Assert
         finder.permutations(new int[]{11, 12, 13, 14});
 
-        verify(checker, times(4)).checkOnePermutation(any());
+        verify(checker, times(4)).checkAndTellNeedToSearchFurther(any());
 
     }
 }

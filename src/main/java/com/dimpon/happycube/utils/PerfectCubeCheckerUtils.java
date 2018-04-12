@@ -14,7 +14,7 @@ import static com.dimpon.happycube.utils.Matrix3dUtils.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PerfectCubeCheckerUtils {
 
-    public static boolean isCubePerfectByPlanes(List<int[][]> unfolded) {
+    public static boolean isCubePerfect(List<int[][]> unfolded) {
 
         if (!isMakeSenseToCheckFurther(unfolded)) {
             return false;
@@ -24,14 +24,4 @@ public class PerfectCubeCheckerUtils {
         return Matrix3dUtils.isCubePerfect(cube);
     }
 
-
-    public static boolean isCubePerfectByEdges(List<Map<MatrixUtils.Edge, Integer>> edges) {
-
-        if (!isMakeSenseToCheckFurtherUsingMagicNumbers(edges)) {
-            return false;
-        }
-        return isCubePerfectUsingEdges(edges);
-    }
-
-
-  }
+}

@@ -1,7 +1,7 @@
 package com.dimpon.happycube.loader;
 
 import com.dimpon.happycube.exception.HappyCubeException;
-import com.dimpon.happycube.pieces.OnePiece;
+import com.dimpon.happycube.pieces.PiecesContainerImpl;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,8 +50,9 @@ public class DataLoaderImpl implements DataLoader {
         this.extension = extension;
     }
 
+
     @Override
-    public void populate(OnePiece piece) {
+    public void populate(PiecesContainerImpl.Piece piece) {
         log.info("Populate piece, num:" + piece.getOrderNumber());
         piece.populate(initialData.get(piece.getOrderNumber()));
     }

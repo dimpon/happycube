@@ -1,14 +1,11 @@
 package com.dimpon.happycube.loader;
 
 import com.dimpon.happycube.exception.HappyCubeException;
-import com.dimpon.happycube.pieces.OnePiece;
+
+import com.dimpon.happycube.pieces.PiecesContainerImpl;
 import com.dimpon.happycube.utils.MatrixUtils;
-import lombok.*;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Map;
-import java.util.stream.Stream;
 
 
 public class DataLoaderTest {
@@ -34,13 +31,13 @@ public class DataLoaderTest {
                 .build();
         loader.loadData();
 
-        TestOnePiece p = new TestOnePiece(1);
+        PiecesContainerImpl.Piece p = new PiecesContainerImpl.Piece(1);
         loader.populate(p);
 
 
         //Assert
-        Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(p.getInitialData(), expectedResult));
-        Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(p.getInitialData(), expectedResult));
+        Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(p.getPositionByKey(20), expectedResult));
+        Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(p.getPositionByKey(20), expectedResult));
 
     }
 
@@ -73,41 +70,6 @@ public class DataLoaderTest {
             Assert.fail();
         } catch (HappyCubeException e) {
             Assert.assertEquals(e.getType(), HappyCubeException.ExceptionsType.WRONG_INIT_DATA);
-        }
-
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    private static class TestOnePiece implements OnePiece {
-
-        private int[][] initialData = new int[MatrixUtils.MATRIX_SIZE][MatrixUtils.MATRIX_SIZE];
-
-        private final int orderNumber;
-
-        @Override
-        public int getOrderNumber() {
-            return orderNumber;
-        }
-
-        @Override
-        public void populate(int[][] initialData) {
-            this.initialData = initialData;
-        }
-
-        @Override
-        public Stream<Integer> positionsSetKeys() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int[][] getPositionByKey(int key) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Map<MatrixUtils.Edge, Integer> getEdgeMagicNumbers(int key) {
-             throw new UnsupportedOperationException();
         }
 
     }

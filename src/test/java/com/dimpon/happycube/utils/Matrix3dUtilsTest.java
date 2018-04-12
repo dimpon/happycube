@@ -38,7 +38,7 @@ public class Matrix3dUtilsTest {
 
         // Check mark points.
         // Mark points are located on every plane in point (1,3)
-        // Good marker to check how 2d unfolded match to 3d cube. See the planes in Data3d
+        // Good marker to checkAndTellNeedToSearchFurther how 2d unfolded match to 3d cube. See the planes in Data3d
         Assert.assertEquals(11, out[0][3][1]);
         Assert.assertEquals(22, out[3][4][1]);
         Assert.assertEquals(33, out[1][0][1]);
@@ -294,6 +294,38 @@ public class Matrix3dUtilsTest {
         Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(0b11010, 0b10101));
         Assert.assertTrue(Matrix3dUtils.isTwoEdgesMatch(0b10011, 0b11101));
         Assert.assertFalse(Matrix3dUtils.isTwoEdgesMatch(0b10111, 0b11101));
+    }
+
+    @Test
+    public void testPlaneOneToTop()throws Exception {
+
+
+        //Act
+        int[][][] cube = planeOneToTop(coloredCube);
+
+        //Assert
+        Assert.assertEquals(2,coloredCube[0][1][1]);
+        Assert.assertEquals(2,coloredCube[0][1][2]);
+        Assert.assertEquals(2,coloredCube[0][1][3]);
+        Assert.assertEquals(2,coloredCube[0][2][1]);
+        Assert.assertEquals(2,coloredCube[0][2][2]);
+        Assert.assertEquals(2,coloredCube[0][2][3]);
+        Assert.assertEquals(2,coloredCube[0][3][1]);
+        Assert.assertEquals(2,coloredCube[0][3][2]);
+        Assert.assertEquals(2,coloredCube[0][3][3]);
+
+
+        Assert.assertEquals(1,cube[0][1][1]);
+        Assert.assertEquals(1,cube[0][1][2]);
+        Assert.assertEquals(1,cube[0][1][3]);
+        Assert.assertEquals(1,cube[0][2][1]);
+        Assert.assertEquals(1,cube[0][2][2]);
+        Assert.assertEquals(1,cube[0][2][3]);
+        Assert.assertEquals(1,cube[0][3][1]);
+        Assert.assertEquals(1,cube[0][3][2]);
+        Assert.assertEquals(1,cube[0][3][3]);
+
+
     }
 
 

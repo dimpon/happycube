@@ -169,6 +169,9 @@ public final class MatrixUtils {
         if (hasFlatSide(in)) {
             return false;
         }
+        if(hasEmptySide(in)){
+            return false;
+        }
 
         return true;
     }
@@ -228,6 +231,35 @@ public final class MatrixUtils {
 
     }
 
+    /**
+     * Method checks whether piece has a empty side (00000). Empty side is bad.
+     * Might be used in Challenge #2
+     *
+     * @return true or false
+     */
+    public static boolean hasEmptySide(int[][] in) {
+
+
+        if (isOneEdgeHasEmptySide(i -> in[0][i])) {
+            return true;
+        }
+
+        if (isOneEdgeHasEmptySide(i -> in[i][0])) {
+            return true;
+        }
+
+        if (isOneEdgeHasEmptySide(i -> in[MATRIX_SIZE - 1][i])) {
+            return true;
+        }
+
+        if (isOneEdgeHasEmptySide(i -> in[i][MATRIX_SIZE - 1])) {
+            return true;
+        }
+
+        return false;
+
+    }
+
     private static boolean isOneEdgeHasFlatSide(FindEdgePixel func) {
         int sum = 0;
         for (int i = 0; i < MATRIX_SIZE; i++) {
@@ -236,99 +268,13 @@ public final class MatrixUtils {
         return (sum == MATRIX_SIZE);
     }
 
-
-    /*
-    The methods below are used for algorithm B, based on edges checking.
-    It turned out that performance is worse.
-     */
-
-
-    private static int one(int a, int b, int c, int d) {
-        return (a & ~b & ~c & ~d) | (~a & b & ~c & ~d) | (~a & ~b & c & ~d) | (~a & ~b & ~c & d);
-    }
-
-    public static boolean checkOneEdge(int... edges) {
-
-        log.debug(String.format("%5s", Integer.toBinaryString(edges[0])).replace(' ', '0'));
-        log.debug(String.format("%5s", Integer.toBinaryString(edges[1])).replace(' ', '0'));
-        log.debug(String.format("%5s", Integer.toBinaryString(edges[2])).replace(' ', '0'));
-        log.debug(String.format("%5s", Integer.toBinaryString(edges[3])).replace(' ', '0'));
-        log.debug("");
-
-
-        int r = one((edges[0] & 0b10000),
-                edges[1], edges[2],
-                (edges[3] & 0b00001));
-
-        return 0b11111 == r;
-    }
-
-    public enum Edge {
-        TOP,
-        BOTTOM,
-        LEFT,
-        RIGHT,
-        TOP_REVERSE,
-        BOTTOM_REVERSE,
-        LEFT_REVERSE,
-        RIGHT_REVERSE
-    }
-
-
-    /**
-     * Returns int representation of matrix edges
-     *
-     * @param matrix initial matrix
-     * @return map of int
-     */
-    public static Map<Edge, Integer> getMagicNumbersOfOneMatrix(int[][] matrix) {
-        Map<Edge, Integer> res = new EnumMap<>(Edge.class);
-
-        for (Edge e : Edge.values()) {
-            res.put(e, edge(matrix, e));
+    private static boolean isOneEdgeHasEmptySide(FindEdgePixel func) {
+        int sum = 0;
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            sum = sum + func.find(i);
         }
-        return res;
+        return (sum == 0);
     }
 
-    /**
-     * Calculates the magic number for piece edge (basically the int representation of binary edge)
-     *
-     * @param matrix piece
-     * @param edge   wich edge to calculate
-     * @return int representation of binary edge
-     */
-    static int edge(int[][] matrix, Edge edge) {
-
-        int res = 0;
-
-        switch (edge) {
-            case TOP_REVERSE:
-                res = IntStream.range(1, MATRIX_SIZE + 1).map(i -> matrix[0][MATRIX_SIZE - i]).reduce((left, right) -> (left << 1) + right).orElse(0);
-                break;
-            case LEFT_REVERSE:
-                res = IntStream.range(1, MATRIX_SIZE + 1).map(i -> matrix[MATRIX_SIZE - i][0]).reduce((left, right) -> (left << 1) + right).orElse(0);
-                break;
-            case RIGHT_REVERSE:
-                res = IntStream.range(1, MATRIX_SIZE + 1).map(i -> matrix[MATRIX_SIZE - i][MATRIX_SIZE - 1]).reduce((left, right) -> (left << 1) + right).orElse(0);
-                break;
-            case BOTTOM_REVERSE:
-                res = IntStream.range(1, MATRIX_SIZE + 1).map(i -> matrix[MATRIX_SIZE - 1][MATRIX_SIZE - i]).reduce((left, right) -> (left << 1) + right).orElse(0);
-                break;
-            case TOP:
-                res = IntStream.range(0, MATRIX_SIZE).map(i -> matrix[0][i]).reduce((left, right) -> (left << 1) + right).orElse(0);
-                break;
-            case LEFT:
-                res = IntStream.range(0, MATRIX_SIZE).map(i -> matrix[i][0]).reduce((left, right) -> (left << 1) + right).orElse(0);
-                break;
-            case RIGHT:
-                res = IntStream.range(0, MATRIX_SIZE).map(i -> matrix[i][MATRIX_SIZE - 1]).reduce((left, right) -> (left << 1) + right).orElse(0);
-                break;
-            case BOTTOM:
-                res = IntStream.range(0, MATRIX_SIZE).map(i -> matrix[MATRIX_SIZE - 1][i]).reduce((left, right) -> (left << 1) + right).orElse(0);
-                break;
-        }
-
-        return res;
-    }
 
 }

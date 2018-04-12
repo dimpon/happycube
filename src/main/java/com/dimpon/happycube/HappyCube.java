@@ -2,78 +2,133 @@ package com.dimpon.happycube;
 
 import com.dimpon.happycube.loader.DataLoaderImpl;
 import com.dimpon.happycube.loader.DataLoader;
-import com.dimpon.happycube.pieces.MainProcessor;
-import com.dimpon.happycube.pieces.OnePiece;
-import com.dimpon.happycube.pieces.OnePieceImpl;
-import com.dimpon.happycube.pieces.MainProcessorImpl;
+import com.dimpon.happycube.pieces.*;
 import com.dimpon.happycube.pieces.helpers.SolutionUniqueCheckerImpl;
 import com.dimpon.happycube.write.SolutionWriter;
 import com.dimpon.happycube.write.SolutionWriterImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+
+import static com.dimpon.happycube.HappyCube.Action.SETS;
+import static com.dimpon.happycube.HappyCube.Action.SOLUTIONS;
 
 @Slf4j
 public class HappyCube {
 
-    public static void main(String[] args) {
 
+    enum Action {
+        SOLUTIONS,
+        SETS
+    }
+
+    public static void main(String[] args) {
         long start = System.currentTimeMillis();
 
-        if(args.length<8){
-            log.info("Usage: <input files directory> <input files prefix> <input files extension> <solutions directory> <solutions files prefix> <solutions files extension> <findFirstSolutionOnly (true/false)> <findUniqueSolutionsOnly (true/false)>");
-            System.exit(1);
-
+        if (args.length < 1) {
+            usage();
         }
 
-        Objects.requireNonNull(args[0], "specify input files directory [0]");
-        Objects.requireNonNull(args[1], "specify input files prefix [1]");
-        Objects.requireNonNull(args[2], "specify input files extension [2]");
+        if (args[0].equals(SOLUTIONS.name())) {
+            solutions(args);
+        } else if (args[0].equals(SETS.name())) {
+            sets(args);
+        } else {
+            usage();
+        }
 
-        Objects.requireNonNull(args[3], "specify solutions files directory [3]");
-        Objects.requireNonNull(args[4], "specify solutions files prefix [4]");
-        Objects.requireNonNull(args[5], "specify solutions files extension [5]");
+        log.info("Time:" + (System.currentTimeMillis() - start));
+    }
 
-        Objects.requireNonNull(args[6], "specify findFirstSolutionOnly (true/false) [6]");
+    private static void solutions(String[] args) {
 
-        Objects.requireNonNull(args[7], "specify findUniqueSolutionsOnly (true/false) [7]");
+        if (args.length < 9) {
+            usage();
+        }
 
-        log.info(args[0]+"/"+args[1]+"*."+args[2]+" >> "+args[3]+"/"+args[4]+"*."+args[5]);
-        log.info("FindFirstSolutionOnly="+args[6]);
+        Objects.requireNonNull(args[1], "specify input files directory [1]");
+        Objects.requireNonNull(args[2], "specify input files prefix [21]");
+        Objects.requireNonNull(args[3], "specify input files extension [3]");
+
+        Objects.requireNonNull(args[4], "specify solutions files directory [4]");
+        Objects.requireNonNull(args[5], "specify solutions files prefix [5]");
+        Objects.requireNonNull(args[6], "specify solutions files extension [6]");
+
+        Objects.requireNonNull(args[7], "specify findFirstSolutionOnly (true/false) [7]");
+
+        Objects.requireNonNull(args[8], "specify findUniqueSolutionsOnly (true/false) [8]");
+
+        log.info(args[1] + "/" + args[2] + "*." + args[3] + " >> " + args[4] + "/" + args[5] + "*." + args[6]);
+        log.info("FindFirstSolutionOnly=" + args[7]);
+        log.info("findUniqueSolutionsOnly=" + args[8]);
         log.info("");
 
         DataLoader loader = DataLoaderImpl.builder()
-                .path(args[0])
-                .prefix(args[1])
-                .extension(args[2])
+                .path(args[1])
+                .prefix(args[2])
+                .extension(args[3])
                 .build();
 
-        SolutionWriter writer  = SolutionWriterImpl.builder()
-                .path(args[3])
-                .prefix(args[4])
-                .extension(args[5])
+        SolutionWriter writer = SolutionWriterImpl.builder()
+                .path(args[4])
+                .prefix(args[5])
+                .extension(args[6])
                 .build();
 
-        Stream<OnePiece> sets = IntStream.range(0,6).mapToObj(OnePieceImpl::new);
+        PiecesContainer container = new PiecesContainerImpl();
+        container.createInitialPieces(loader);
 
-        MainProcessor processor = MainProcessorImpl.builder()
+        MainProcessor processor = MainSolutionsProcessor.builder()
                 .checkSolutionUnique(new SolutionUniqueCheckerImpl())
-                .loader(loader)
+                .container(container)
                 .writer(writer)
-                .findFirstSolutionOnly(Boolean.parseBoolean(args[6]))
-                .findUniqueSolutionsOnly(Boolean.parseBoolean(args[7]))
-                .positionsSets(sets.collect(Collectors.toList()))
+                .findFirstSolutionOnly(Boolean.parseBoolean(args[7]))
+                .findUniqueSolutionsOnly(Boolean.parseBoolean(args[8]))
                 .build();
 
-        processor.prepareData();
         processor.letsRoll();
 
-        log.info("Time:"+(System.currentTimeMillis()-start));
+    }
+
+    private static void sets(String[] args) {
+
+        if (args.length < 4) {
+            usage();
+        }
+
+        Objects.requireNonNull(args[1], "specify solutions files directory [1]");
+        Objects.requireNonNull(args[2], "specify solutions files prefix [2]");
+        Objects.requireNonNull(args[3], "specify solutions files extension [3]");
+
+        log.info(" >> " + args[1] + "/" + args[2] + "*." + args[3]);
+
+        log.info("");
+
+        SolutionWriter writer = SolutionWriterImpl.builder()
+                .path(args[1])
+                .prefix(args[2])
+                .extension(args[3])
+                .build();
 
 
+
+        PiecesContainer container = new PotentialSetsPiecesContainerImpl();
+        container.createInitialPieces(DataLoader.STUB);
+
+        MainProcessor processor = MainSetsProcessor.builder()
+                .writer(writer)
+                .container(container)
+                .build();
+
+        processor.letsRoll();
+
+
+
+    }
+
+    private static void usage() {
+        log.info("Usage: <SOLUTIONS/SETS> <input files directory> <input files prefix> <input files extension> <solutions directory> <solutions files prefix> <solutions files extension> <findFirstSolutionOnly (true/false)> <findUniqueSolutionsOnly (true/false)>");
+        System.exit(1);
     }
 
 }
