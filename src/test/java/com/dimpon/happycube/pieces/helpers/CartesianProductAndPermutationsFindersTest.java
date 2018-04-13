@@ -1,16 +1,16 @@
-package com.dimpon.happycube.loader;
+package com.dimpon.happycube.pieces.helpers;
 
-import com.dimpon.happycube.pieces.helpers.CartesianProductFinder;
-import com.dimpon.happycube.pieces.helpers.PerfectCubeChecker;
-import com.dimpon.happycube.pieces.helpers.PerfectCubeCheckerImpl;
-import com.dimpon.happycube.pieces.helpers.PermutationsFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.dimpon.happycube.utils.Data3dRealPlanes.leftPlaneReal;
+import static com.dimpon.happycube.utils.Data3dRealPlanes.rightPlaneReal;
+import static com.dimpon.happycube.utils.Data3dRealPlanes.topPlaneReal;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -61,6 +61,92 @@ public class CartesianProductAndPermutationsFindersTest {
 
     }
 
+
+    static final int[][][] set1 = new int[][][]{
+            {
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {0, 1, 1, 1, 1}
+            },
+            leftPlaneReal,
+            {
+                    {1, 1, 0, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1}
+            }
+    };
+
+    static final int[][][] set2 = new int[][][]{
+            {
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 0},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1}
+            },
+            {
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 0, 1}
+            },
+            topPlaneReal
+    };
+
+    static final int[][][] set3 = new int[][][]{
+            {
+                    {1, 1, 0, 1, 1},
+                    {0, 1, 1, 1, 1},
+                    {0, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 0, 1}
+            },
+            rightPlaneReal,
+            {
+                    {1, 1, 1, 1, 0},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 0, 1, 1}
+            }
+    };
+
+    @Test
+    public void findCombinationsAdvanced() throws Exception {
+        //Assert
+        List<int[][][]> input = new ArrayList<int[][][]>(3) {{
+            add(set1);
+            add(set2);
+            add(set3);
+        }};
+
+        @SuppressWarnings("unchecked")
+        Consumer<int[][][]> consumer = (Consumer<int[][][]>) mock(Consumer.class);
+
+        //final AtomicInteger count = new AtomicInteger(0);
+        //Act
+        CartesianProductFinderAdvanced cpFinder = new CartesianProductFinderAdvanced(input);
+        cpFinder.combinationsWithoutSaving(consumer);
+
+        //Arrange
+        verify(consumer, times(1)).accept(any());
+        verify(consumer, times(1)).accept(new int[][][]{leftPlaneReal, topPlaneReal, rightPlaneReal});
+
+        /*verify(consumer,times(1)).accept(new int[][][]{set1[0],set2[0],set3[0]});
+        verify(consumer,times(1)).accept(new int[][][]{set1[0],set2[0],set3[1]});
+        verify(consumer,times(1)).accept(new int[][][]{set1[0],set2[0],set3[2]});
+
+        verify(consumer,times(1)).accept(new int[][][]{set1[1],set2[0],set3[0]});
+        verify(consumer,times(1)).accept(new int[][][]{set1[1],set2[0],set3[1]});
+        verify(consumer,times(1)).accept(new int[][][]{set1[1],set2[0],set3[2]});*/
+        //etc
+    }
+
     @Test
     public void findCombinations() throws Exception {
 
@@ -101,7 +187,8 @@ public class CartesianProductAndPermutationsFindersTest {
     public void findPermutations() throws Exception {
 
         //Arrange
-        PerfectCubeChecker checker = mock(PerfectCubeChecker.class);
+        @SuppressWarnings("unchecked")
+        PerfectCubeChecker<int[]> checker = (PerfectCubeChecker<int[]>) mock(PerfectCubeChecker.class);
 
         //when(checker.checkOnePermutation(any())).thenReturn(false);
         when(checker.checkAndTellNeedToSearchFurther(any())).thenReturn(true);
@@ -120,7 +207,7 @@ public class CartesianProductAndPermutationsFindersTest {
     public void testFindFirstPermutations() throws Exception {
 
         //Arrange
-        PerfectCubeChecker obj = PerfectCubeCheckerImpl.builder()
+        PerfectCubeChecker<int[]> obj = PerfectCubeCheckerSolutions.builder()
                 .findFirstSolutionOnly(true)
                 .build();
 
@@ -141,7 +228,7 @@ public class CartesianProductAndPermutationsFindersTest {
     public void testStopSearchInTheMiddle() throws Exception {
 
         //Arrange
-        PerfectCubeChecker obj = PerfectCubeCheckerImpl.builder()
+        PerfectCubeChecker<int[]> obj = PerfectCubeCheckerSolutions.builder()
                 .findFirstSolutionOnly(true)
                 .build();
 

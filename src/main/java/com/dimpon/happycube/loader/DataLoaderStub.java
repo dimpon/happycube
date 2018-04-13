@@ -1,6 +1,6 @@
 package com.dimpon.happycube.loader;
 
-import com.dimpon.happycube.pieces.PiecesContainerImpl;
+import com.dimpon.happycube.pieces.PiecesContainerSolutions;
 
 public class DataLoaderStub implements DataLoader {
     @Override
@@ -9,7 +9,7 @@ public class DataLoaderStub implements DataLoader {
     }
 
     @Override
-    public void populate(PiecesContainerImpl.Piece piece) {
+    public void populate(PiecesContainerSolutions.Piece piece) {
         throw new UnsupportedOperationException();
     }
 }

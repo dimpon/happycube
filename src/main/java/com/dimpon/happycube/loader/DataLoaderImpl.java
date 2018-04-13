@@ -1,7 +1,7 @@
 package com.dimpon.happycube.loader;
 
 import com.dimpon.happycube.exception.HappyCubeException;
-import com.dimpon.happycube.pieces.PiecesContainerImpl;
+import com.dimpon.happycube.pieces.PiecesContainerSolutions;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,7 +52,7 @@ public class DataLoaderImpl implements DataLoader {
 
 
     @Override
-    public void populate(PiecesContainerImpl.Piece piece) {
+    public void populate(PiecesContainerSolutions.Piece piece) {
         log.info("Populate piece, num:" + piece.getOrderNumber());
         piece.populate(initialData.get(piece.getOrderNumber()));
     }

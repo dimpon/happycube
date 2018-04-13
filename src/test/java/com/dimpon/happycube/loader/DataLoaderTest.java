@@ -2,7 +2,7 @@ package com.dimpon.happycube.loader;
 
 import com.dimpon.happycube.exception.HappyCubeException;
 
-import com.dimpon.happycube.pieces.PiecesContainerImpl;
+import com.dimpon.happycube.pieces.PiecesContainerSolutions;
 import com.dimpon.happycube.utils.MatrixUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class DataLoaderTest {
                 .build();
         loader.loadData();
 
-        PiecesContainerImpl.Piece p = new PiecesContainerImpl.Piece(1);
+        PiecesContainerSolutions.Piece p = new PiecesContainerSolutions.Piece(1);
         loader.populate(p);
 
 

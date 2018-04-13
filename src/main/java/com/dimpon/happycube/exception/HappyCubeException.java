@@ -8,6 +8,7 @@ public class HappyCubeException extends RuntimeException {
 
     @AllArgsConstructor
     public enum ExceptionsType{
+        WRONG_EDGE_ARRAY("Edge array must have 16 symbols"),
         LOADER_NOT_FOUND("Loader is required"),
         WRITER_NOT_FOUND("Writer is required"),
         WRONG_INIT_DATA("Init piece(s) has a gap in the middle or hanging corner"),

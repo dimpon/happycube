@@ -14,7 +14,7 @@ import static com.dimpon.happycube.utils.MatrixUtils.*;
 /**
  * Class contains all pieces and its variants. Variants are result of rotation and mirroring the piece.
  */
-public class PiecesContainerImpl implements PiecesContainer {
+public class PiecesContainerSolutions implements PiecesContainer<int[]> {
 
     private List<Piece> positionsSets = new ArrayList<>(6);
 
@@ -36,7 +36,7 @@ public class PiecesContainerImpl implements PiecesContainer {
     }
 
     @Override
-    public Stream<int[]> getPiecesCodesGroupedByOrigins() {
+    public Stream<int[]> getObjectsForCombinations() {
         return this.positionsSets.stream()
                 .map(e -> e.positionsSetKeys().mapToInt(Integer::intValue)
                         .toArray());

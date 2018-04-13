@@ -18,24 +18,24 @@ import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.*
  * Start searching - find cartesian product and then for every combination run permutation finding in parallel.
  */
 @Slf4j
-public class MainSolutionsProcessor implements MainProcessor {
+public class MainProcessorSolutions implements MainProcessor {
 
 
-    private PiecesContainer container;
+    private PiecesContainer<int[]> container;
 
     private final SolutionWriter writer;
 
-    private PerfectCubeChecker cubeChecker;
+    private PerfectCubeChecker<int[]> cubeChecker;
 
     private final boolean findFirstSolutionOnly;
 
     @Builder
-    public MainSolutionsProcessor(PiecesContainer container, SolutionWriter writer, boolean findFirstSolutionOnly, boolean findUniqueSolutionsOnly, SolutionUniqueChecker checkSolutionUnique) {
+    public MainProcessorSolutions(PiecesContainer<int[]> container, SolutionWriter writer, boolean findFirstSolutionOnly, boolean findUniqueSolutionsOnly, SolutionUniqueChecker checkSolutionUnique) {
         this.container = container;
         this.writer = writer;
         this.findFirstSolutionOnly = findFirstSolutionOnly;
 
-        this.cubeChecker = PerfectCubeCheckerImpl.builder()
+        this.cubeChecker = PerfectCubeCheckerSolutions.builder()
                 .container(container)
                 .findFirstSolutionOnly(findFirstSolutionOnly)
                 .findUniqueSolutionsOnly(findUniqueSolutionsOnly)
@@ -55,7 +55,7 @@ public class MainSolutionsProcessor implements MainProcessor {
         //here we have 6 "boxes" (one for each piece) with diff positions of planes. Need to find Cartesian Product of planes
         //and for every set from Cartesian Product checkAndTellNeedToSearchFurther all permutations.
 
-        List<int[]> positionsSets = container.getPiecesCodesGroupedByOrigins().collect(Collectors.toList());
+        List<int[]> positionsSets = container.getObjectsForCombinations().collect(Collectors.toList());
 
         CartesianProductFinder cpFinder = new CartesianProductFinder(positionsSets);
         Stream<int[]> combinations = cpFinder.combinations();

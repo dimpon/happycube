@@ -2,13 +2,13 @@ package com.dimpon.happycube.pieces.helpers;
 
 
 @FunctionalInterface
-public interface PerfectCubeChecker {
+public interface PerfectCubeChecker<T> {
 
      /**
       * Checks one set of planes and returns false is needed to stop permutation findings
       *
-      * @param keys codes of pieces
+      * @param keys  based on objects the unwrapped plan is done
       * @return true of false
       */
-     boolean checkAndTellNeedToSearchFurther(int[] keys);
+     boolean checkAndTellNeedToSearchFurther(T keys);
 }

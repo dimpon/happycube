@@ -10,7 +10,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.*;
 
-public class PerfectCubeCheckerImplTest {
+public class PerfectCubeCheckerSolutionsTest {
 
     @Test
     public void testChecker() throws Exception {
@@ -30,7 +30,7 @@ public class PerfectCubeCheckerImplTest {
 
 
 
-        PerfectCubeChecker checker = PerfectCubeCheckerImpl.builder()
+        PerfectCubeChecker<int[]> checker = PerfectCubeCheckerSolutions.builder()
                 .findUniqueSolutionsOnly(true)
                 .findFirstSolutionOnly(false)
                 .container(container)

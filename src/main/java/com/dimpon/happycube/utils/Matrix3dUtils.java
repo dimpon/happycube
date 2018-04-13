@@ -336,7 +336,7 @@ public class Matrix3dUtils {
         return true;
     }
 
-    static boolean isTwoEdgesMatch(int[] one, int[] two) {
+    public static boolean isTwoEdgesMatch(int[] one, int[] two) {
         int res = 0;
         for (int i = 1; i < MATRIX_SIZE - 1; i++) {
             res = res + (one[i] ^ two[i]);

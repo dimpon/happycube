@@ -5,7 +5,7 @@ import com.dimpon.happycube.loader.DataLoader;
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface PiecesContainer {
+public interface PiecesContainer<T> {
 
     /**
      * Loads initial data and creates the variant for each pieces, save each piece with unique code
@@ -25,9 +25,9 @@ public interface PiecesContainer {
     /**
      * Returns all codes for all pieces variants grouped by "sources"
      *
-     * @return stream with codes
+     * @return stream with object which are used for Cartesian Product
      */
-    Stream<int[]> getPiecesCodesGroupedByOrigins();
+    Stream<T> getObjectsForCombinations();
 
 
 }

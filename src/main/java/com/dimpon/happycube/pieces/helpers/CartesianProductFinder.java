@@ -22,29 +22,17 @@ public class CartesianProductFinder {
 
     private final int[] temp;
 
-    private Consumer<int[]> task;
-
-    private boolean callTaskInsteadOfSaving = false;
 
     public Stream<int[]> combinations() {
         solution(0);
         return combinations.stream();
     }
 
-    public void combinationsWithoutSaving(Consumer<int[]> task) {
-        this.task = task;
-        callTaskInsteadOfSaving = true;
-        solution(0);
-    }
 
     private void solution(int index) {
 
         if (index > temp.length - 1) {
-            if (callTaskInsteadOfSaving) {
-                task.accept(Arrays.copyOf(temp, temp.length));
-            } else {
-                combinations.add(Arrays.copyOf(temp, temp.length));
-            }
+            combinations.add(Arrays.copyOf(temp, temp.length));
             return;
         }
 

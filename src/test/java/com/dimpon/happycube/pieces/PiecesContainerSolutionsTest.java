@@ -6,11 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-public class PiecesContainerImplTest {
+public class PiecesContainerSolutionsTest {
 
     @Test
     public void testPopulateAndFindAllPositions() throws Exception {
@@ -23,7 +20,7 @@ public class PiecesContainerImplTest {
                 {1, 1, 1, 1, 1},
                 {1, 0, 1, 0, 1}
         };
-        PiecesContainerImpl.Piece p1 = new PiecesContainerImpl.Piece(0);
+        PiecesContainerSolutions.Piece p1 = new PiecesContainerSolutions.Piece(0);
 
         //Act
         p1.populate(initData1);
@@ -39,7 +36,7 @@ public class PiecesContainerImplTest {
                 {1, 1, 1, 1, 1},
                 {0, 0, 0, 0, 1}
         };
-        PiecesContainerImpl.Piece p2 = new PiecesContainerImpl.Piece(1);
+        PiecesContainerSolutions.Piece p2 = new PiecesContainerSolutions.Piece(1);
 
         //Act
         p2.populate(initData2);
@@ -55,7 +52,7 @@ public class PiecesContainerImplTest {
                 {0, 1, 1, 1, 1},
                 {0, 0, 0, 0, 0}
         };
-        PiecesContainerImpl.Piece p3 = new PiecesContainerImpl.Piece(2);
+        PiecesContainerSolutions.Piece p3 = new PiecesContainerSolutions.Piece(2);
 
         //Act
         p3.populate(initData3);
@@ -71,7 +68,7 @@ public class PiecesContainerImplTest {
                 {0, 1, 1, 1, 0},
                 {0, 0, 1, 0, 0}
         };
-        PiecesContainerImpl.Piece p4 = new PiecesContainerImpl.Piece(3);
+        PiecesContainerSolutions.Piece p4 = new PiecesContainerSolutions.Piece(3);
 
         //Act
         p4.populate(initData4);
@@ -118,7 +115,7 @@ public class PiecesContainerImplTest {
                 .build();
 
 
-        PiecesContainer container = new PiecesContainerImpl();
+        PiecesContainer container = new PiecesContainerSolutions();
         container.createInitialPieces(loader);
 
         Assert.assertTrue(Arrays.deepEquals(plane1, container.getPiecePositionByKey(10)));

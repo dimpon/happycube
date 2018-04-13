@@ -1,6 +1,6 @@
 package com.dimpon.happycube.loader;
 
-import com.dimpon.happycube.pieces.PiecesContainerImpl;
+import com.dimpon.happycube.pieces.PiecesContainerSolutions;
 
 /**
  * Just interface for DataLoaderImpl.
@@ -10,7 +10,7 @@ public interface DataLoader {
 
     void loadData();
 
-    void populate(PiecesContainerImpl.Piece piece);
+    void populate(PiecesContainerSolutions.Piece piece);
 
     DataLoader STUB = new DataLoaderStub();
 

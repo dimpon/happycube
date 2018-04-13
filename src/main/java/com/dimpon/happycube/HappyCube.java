@@ -75,10 +75,10 @@ public class HappyCube {
                 .extension(args[6])
                 .build();
 
-        PiecesContainer container = new PiecesContainerImpl();
+        PiecesContainer container = new PiecesContainerSolutions();
         container.createInitialPieces(loader);
 
-        MainProcessor processor = MainSolutionsProcessor.builder()
+        MainProcessor processor = MainProcessorSolutions.builder()
                 .checkSolutionUnique(new SolutionUniqueCheckerImpl())
                 .container(container)
                 .writer(writer)
@@ -112,10 +112,10 @@ public class HappyCube {
 
 
 
-        PiecesContainer container = new PotentialSetsPiecesContainerImpl();
+        PiecesContainer<int[][][]> container = new PiecesContainerSets();
         container.createInitialPieces(DataLoader.STUB);
 
-        MainProcessor processor = MainSetsProcessor.builder()
+        MainProcessor processor = MainProcessorSets.builder()
                 .writer(writer)
                 .container(container)
                 .build();

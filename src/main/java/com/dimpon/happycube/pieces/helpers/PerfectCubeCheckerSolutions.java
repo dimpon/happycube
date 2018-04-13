@@ -17,9 +17,9 @@ import static com.dimpon.happycube.utils.Matrix3dUtils.foldColoredCube;
  */
 @Slf4j
 @Builder
-public class PerfectCubeCheckerImpl implements PerfectCubeChecker {
+public class PerfectCubeCheckerSolutions implements PerfectCubeChecker<int[]> {
 
-    private PiecesContainer container;
+    private PiecesContainer<int[]> container;
 
     private boolean findFirstSolutionOnly = false;
 
