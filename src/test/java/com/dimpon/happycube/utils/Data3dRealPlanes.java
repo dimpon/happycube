@@ -81,6 +81,58 @@ ooooo ooo ooooo
             {1, 0, 1, 0, 1}
     };
 
+    //////////////////////
+
+    public static final int[][] leftPlaneRealLilac = new int[][]{
+            {1, 1, 0, 0, 0},
+            {1, 1, 1, 1, 1},
+            {0, 1, 1, 1, 0},
+            {1, 1, 1, 1, 1},
+            {1, 0, 1, 0, 0}
+    };
+
+    public static final int[][] topPlaneRealLilac = new int[][]{
+            {1, 1, 1, 0, 0},
+            {0, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1},
+            {0, 1, 1, 1, 0},
+            {0, 0, 1, 1, 1}
+    };
+
+    public static final int[][] rightPlaneRealLilac = new int[][]{
+            {0, 1, 0, 1, 1},
+            {0, 1, 1, 1, 1},
+            {0, 1, 1, 1, 1},
+            {1, 1, 1, 1, 0},
+            {0, 0, 1, 0, 0}
+    };
+
+    public static final int[][] frontPlaneRealLilac = new int[][]{
+            {1, 1, 0, 0, 0},
+            {1, 1, 1, 1, 1},
+            {0, 1, 1, 1, 0},
+            {1, 1, 1, 1, 1},
+            {0, 0, 1, 0, 1}
+    };
+
+    public static final int[][] bottomPlaneRealLilac = new int[][]{
+            {0, 1, 0, 1, 0},
+            {0, 1, 1, 1, 1},
+            {1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 0},
+            {0, 0, 1, 0, 0}
+    };
+
+    public static final int[][] backPlaneRealLilac = new int[][]{
+            {0, 1, 0, 1, 0},
+            {0, 1, 1, 1, 0},
+            {1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 0},
+            {0, 0, 0, 1, 1}
+    };
+
+
+
 
     public static final int[][][] realCubeLilac = new int[][][]{
             {

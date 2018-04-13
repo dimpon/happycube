@@ -13,7 +13,7 @@ import static org.mockito.Mockito.*;
 
 public class MainProcessorSetsTest {
 
-    private static final boolean makeLock = false;
+    private static final boolean makeLock = true;
 
     @Test
     public void testRollIt() throws Exception {
@@ -46,15 +46,19 @@ public class MainProcessorSetsTest {
 
 
         int[][][] left = new int[][][]{
-                leftPlaneReal
+                leftPlaneReal,
+                topPlaneReal,
+                rightPlaneReal
         };
 
         int[][][] top = new int[][][]{
-                topPlaneReal
+                topPlaneReal,
+                rightPlaneReal
         };
 
         int[][][] right = new int[][][]{
-                rightPlaneReal
+                rightPlaneReal,
+                topPlaneReal
         };
 
         int[][][] front = new int[][][]{
@@ -62,11 +66,14 @@ public class MainProcessorSetsTest {
         };
 
         int[][][] bottom = new int[][][]{
-                bottomPlaneReal
+                bottomPlaneReal,
+                frontPlaneReal
         };
 
         int[][][] back = new int[][][]{
-                backPlaneReal
+                backPlaneReal,
+                bottomPlaneReal,
+                topPlaneReal
         };
 
 

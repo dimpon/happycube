@@ -8,9 +8,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.dimpon.happycube.utils.Data3dRealPlanes.leftPlaneReal;
-import static com.dimpon.happycube.utils.Data3dRealPlanes.rightPlaneReal;
-import static com.dimpon.happycube.utils.Data3dRealPlanes.topPlaneReal;
+import static com.dimpon.happycube.utils.Data3dRealPlanes.*;
+import static com.dimpon.happycube.utils.Data3dRealPlanes.backPlaneRealLilac;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -68,11 +67,12 @@ public class CartesianProductAndPermutationsFindersTest {
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
-                    {0, 1, 1, 1, 1}
+                    {1, 1, 1, 1, 1}
             },
             leftPlaneReal,
+            leftPlaneRealLilac,
             {
-                    {1, 1, 0, 1, 1},
+                    {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
@@ -84,7 +84,7 @@ public class CartesianProductAndPermutationsFindersTest {
             {
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
-                    {1, 1, 1, 1, 0},
+                    {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1}
             },
@@ -93,27 +93,44 @@ public class CartesianProductAndPermutationsFindersTest {
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
-                    {1, 1, 1, 0, 1}
+                    {1, 1, 1, 1, 1}
             },
-            topPlaneReal
+            topPlaneReal,
+            topPlaneRealLilac
     };
 
     static final int[][][] set3 = new int[][][]{
             {
                     {1, 1, 0, 1, 1},
-                    {0, 1, 1, 1, 1},
-                    {0, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 0, 1}
             },
             rightPlaneReal,
+            rightPlaneRealLilac,
             {
-                    {1, 1, 1, 1, 0},
+                    {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 1, 1, 1},
                     {1, 1, 0, 1, 1}
             }
+    };
+
+    static final int[][][] set4 = new int[][][]{
+            frontPlaneReal,
+            frontPlaneRealLilac
+    };
+
+    static final int[][][] set5 = new int[][][]{
+            bottomPlaneReal,
+            bottomPlaneRealLilac
+    };
+
+    static final int[][][] set6 = new int[][][]{
+            backPlaneReal,
+            backPlaneRealLilac
     };
 
     @Test
@@ -123,6 +140,9 @@ public class CartesianProductAndPermutationsFindersTest {
             add(set1);
             add(set2);
             add(set3);
+            add(set4);
+            add(set5);
+            add(set6);
         }};
 
         @SuppressWarnings("unchecked")
@@ -134,17 +154,11 @@ public class CartesianProductAndPermutationsFindersTest {
         cpFinder.combinationsWithoutSaving(consumer);
 
         //Arrange
-        verify(consumer, times(1)).accept(any());
-        verify(consumer, times(1)).accept(new int[][][]{leftPlaneReal, topPlaneReal, rightPlaneReal});
+        verify(consumer, times(2)).accept(any());
+        verify(consumer, times(1)).accept(new int[][][]{leftPlaneReal, topPlaneReal, rightPlaneReal, frontPlaneReal, bottomPlaneReal, backPlaneReal});
+        verify(consumer, times(1)).accept(new int[][][]{leftPlaneRealLilac, topPlaneRealLilac, rightPlaneRealLilac, frontPlaneRealLilac, bottomPlaneRealLilac, backPlaneRealLilac});
 
-        /*verify(consumer,times(1)).accept(new int[][][]{set1[0],set2[0],set3[0]});
-        verify(consumer,times(1)).accept(new int[][][]{set1[0],set2[0],set3[1]});
-        verify(consumer,times(1)).accept(new int[][][]{set1[0],set2[0],set3[2]});
 
-        verify(consumer,times(1)).accept(new int[][][]{set1[1],set2[0],set3[0]});
-        verify(consumer,times(1)).accept(new int[][][]{set1[1],set2[0],set3[1]});
-        verify(consumer,times(1)).accept(new int[][][]{set1[1],set2[0],set3[2]});*/
-        //etc
     }
 
     @Test

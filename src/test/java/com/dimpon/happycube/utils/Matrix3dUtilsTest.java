@@ -106,6 +106,30 @@ public class Matrix3dUtilsTest {
     }
 
     @Test
+    public void testFoldTheRealCubeLilac() throws Exception {
+
+        List<int[][]> unfolded = new ArrayList<>(6);
+        unfolded.add(leftPlaneRealLilac);
+        unfolded.add(topPlaneRealLilac);
+        unfolded.add(rightPlaneRealLilac);
+
+        unfolded.add(frontPlaneRealLilac);
+        unfolded.add(bottomPlaneRealLilac);
+        unfolded.add(backPlaneRealLilac);
+
+
+        int[][][] out = Matrix3dUtils.foldTheCube(unfolded);
+
+        Assert.assertTrue(Matrix3dUtils.isCubePerfect(out));
+
+        int[][][] out1 = Matrix3dUtils.foldTheCube(Arrays.stream(realCubeLilac).collect(Collectors.toList()));
+
+        Assert.assertTrue(Matrix3dUtils.isCubePerfect(out1));
+
+    }
+
+
+    @Test
     public void testIsMakeSenseToCheckFurther() throws Exception {
 
         List<int[][]> unfolded = new ArrayList<>(6);

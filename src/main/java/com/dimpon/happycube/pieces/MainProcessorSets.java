@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.WRITER_NOT_FOUND;
@@ -41,14 +43,14 @@ public class MainProcessorSets implements MainProcessor {
 
         List<int[][][]> variantsSets = container.getObjectsForCombinations().collect(Collectors.toList());
 
-        //final ExecutorService executor = Executors.newFixedThreadPool(2);
+        final ExecutorService executor = Executors.newFixedThreadPool(2);
 
         CartesianProductFinderAdvanced cpFinder = new CartesianProductFinderAdvanced(variantsSets);
         cpFinder.combinationsWithoutSaving(ints -> {
-            //executor.submit(() -> {
+            executor.submit(() -> {
                 log.debug("checker:" + Arrays.deepToString(ints));
                 checker.checkAndTellNeedToSearchFurther(Arrays.stream(ints).collect(Collectors.toList()));
-            //});
+            });
 
         });
 

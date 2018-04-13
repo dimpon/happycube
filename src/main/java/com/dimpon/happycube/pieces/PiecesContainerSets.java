@@ -36,12 +36,6 @@ public class PiecesContainerSets implements PiecesContainer<int[][][]> {
     @Override
     public int[][] getPiecePositionByKey(int key) {
         throw new UnsupportedOperationException();
-        /*for (PotentialPiece one : variantsSet) {
-            Optional<Integer> first = one.positionsSetKeys().filter((e) -> e.equals(key)).findFirst();
-            if (first.isPresent())
-                return one.getPositionByKey(key);
-        }
-        throw new HappyCubeException(PIECE_POSITION_NOT_FOUND);*/
     }
 
     @Override
@@ -122,10 +116,23 @@ public class PiecesContainerSets implements PiecesContainer<int[][][]> {
                             .collect(Collectors.joining());
                 }).forEach(log::debug);
 
-                log.debug("");*/
+                if(Arrays.deepEquals(romb,variant)){
+                    System.exit(1);
+                }*/
+
+
+
 
             }
         }
+
+//        private final static int[][] romb = new int[][]{
+//                {0, 0, 1, 0, 0},
+//                {0, 1, 1, 1, 0},
+//                {1, 1, 1, 1, 1},
+//                {0, 1, 1, 1, 0},
+//                {0, 0, 1, 0, 0}
+//        };
 
         /**
          * The edgesLine "wraps" 3x3 like a snake clockwise
