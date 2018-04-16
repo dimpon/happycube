@@ -22,11 +22,10 @@ public class PerfectCubeCheckerSets implements PerfectCubeChecker<List<int[][]>>
 
         log.debug("set check...");
 
-
         boolean isPerfect = PerfectCubeCheckerUtils.isCubePerfect(matrices);
 
         if (isPerfect) {
-            log.info("perfect!");
+            log.debug("perfect!");
             save(matrices);
         }
 

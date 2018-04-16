@@ -57,8 +57,6 @@ public class CartesianProductFinderAdvanced {
 
     private boolean earlyReject(int index, int[][] newVariant) {
 
-        //int res = 0;
-
         switch (index) {
             case 0:
 

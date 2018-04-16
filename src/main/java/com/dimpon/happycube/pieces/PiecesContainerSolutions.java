@@ -12,7 +12,7 @@ import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.P
 import static com.dimpon.happycube.utils.MatrixUtils.*;
 
 /**
- * Class contains all pieces and its variants. Variants are result of rotation and mirroring the piece.
+ * Class contains all pieces and its variants. Variants are result of rotation and mirroring of one piece.
  */
 public class PiecesContainerSolutions implements PiecesContainer<int[]> {
 
@@ -85,7 +85,7 @@ public class PiecesContainerSolutions implements PiecesContainer<int[]> {
         }
 
 
-        public Stream<Integer> positionsSetKeys() {
+        Stream<Integer> positionsSetKeys() {
             return positions.keySet().stream();
         }
 

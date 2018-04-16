@@ -60,11 +60,10 @@ public class DataLoaderImpl implements DataLoader {
     @SneakyThrows(IOException.class)
     public void loadData() {
         log.info("Load initial data...");
-        try (Stream<Path> stream = Files.find(Paths.get(path), 1, matcherForFilesNames)) {
-            stream
-                    .sorted(Comparator.naturalOrder())
-                    .forEach(this::readOneFile);
-        }
+        @Cleanup Stream<Path> stream = Files.find(Paths.get(path), 1, matcherForFilesNames);
+        stream.sorted(Comparator.naturalOrder())
+                .forEach(this::readOneFile);
+
     }
 
     /**

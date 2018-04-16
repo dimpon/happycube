@@ -11,11 +11,11 @@ import java.util.Arrays;
 @Slf4j
 public  class PermutationsFinder {
 
-    private PerfectCubeChecker checker;
+    private PerfectCubeChecker<int[]> checker;
 
     private volatile boolean needToCheckFurther = true;
 
-    public PermutationsFinder(PerfectCubeChecker checker) {
+    public PermutationsFinder(PerfectCubeChecker<int[]> checker) {
         this.checker = checker;
     }
 

@@ -26,7 +26,6 @@ public class MainProcessorSets implements MainProcessor {
     public MainProcessorSets(PiecesContainer<int[][][]> container, SolutionWriter writer) {
         this.container = container;
         this.writer = writer;
-        //this.cubeChecker = cubeChecker;
     }
 
     @Override

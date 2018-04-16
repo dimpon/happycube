@@ -126,14 +126,6 @@ public class PiecesContainerSets implements PiecesContainer<int[][][]> {
             }
         }
 
-//        private final static int[][] romb = new int[][]{
-//                {0, 0, 1, 0, 0},
-//                {0, 1, 1, 1, 0},
-//                {1, 1, 1, 1, 1},
-//                {0, 1, 1, 1, 0},
-//                {0, 0, 1, 0, 0}
-//        };
-
         /**
          * The edgesLine "wraps" 3x3 like a snake clockwise
          */
