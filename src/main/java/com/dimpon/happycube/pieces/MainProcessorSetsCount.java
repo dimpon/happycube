@@ -1,103 +1,28 @@
 package com.dimpon.happycube.pieces;
 
-import com.dimpon.happycube.pieces.helpers.CartesianProductFinder;
 import com.dimpon.happycube.pieces.helpers.CartesianProductFinderLight;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 @Slf4j
 @Builder
 public class MainProcessorSetsCount implements MainProcessor {
 
-     /*
+    private long $total = 0;
 
-     <blockquote><pre>
-
-     The class has vector (or array) structure describes pixels of the 3d cube edges.
-     Basically it is 2d cube representation.
-     The 2d representation looks like:
+    private List<int[]> cubePixels;
 
 
-     [ 0] [1] [2] [3] [4] [5] [6] [7] [8] [9][10][11][12][13][14][15]
-     [32]            [35]            [38]            [41]
-     [33]     1      [36]      2     [39]      3     [42]     4
-     [34]            [37]            [40]            [43]
-     [16][17][18][19][20][21][22][23][24][25][26][27][28][29][30][31]
 
-                                       6
 
-     Every edge pixel can have 2 variants of color, corner pixel can have 3 colors.
-     Figures in centers are colors of planes.
-     Based on this assumption I will find combinations.
-
-     </pre></blockquote>
-    */
-
-    private static final List<int[]> edges = new ArrayList<int[]>(16 + 16 + 12) {{
-
-        add(new int[]{1, 4, 5});//0
-        add(new int[]{1, 5});
-        add(new int[]{1, 5});
-        add(new int[]{1, 5});
-        add(new int[]{1, 2, 5});//4
-        add(new int[]{2, 5});
-        add(new int[]{2, 5});
-        add(new int[]{2, 5});
-        add(new int[]{2, 3, 5});//8
-        add(new int[]{3, 5});
-        add(new int[]{3, 5});
-        add(new int[]{3, 5});
-        add(new int[]{3, 4, 5});//12
-        add(new int[]{4, 5});
-        add(new int[]{4, 5});
-        add(new int[]{4, 5});
-
-        add(new int[]{1, 4, 6});//16
-        add(new int[]{1, 6});
-        add(new int[]{1, 6});
-        add(new int[]{1, 6});
-        add(new int[]{1, 2, 6});//20
-        add(new int[]{2, 6});
-        add(new int[]{2, 6});
-        add(new int[]{2, 6});
-        add(new int[]{2, 3, 6});//24
-        add(new int[]{3, 6});
-        add(new int[]{3, 6});
-        add(new int[]{3, 6});
-        add(new int[]{3, 4, 6});//28
-        add(new int[]{4, 6});
-        add(new int[]{4, 6});
-        add(new int[]{4, 6});
-
-        add(new int[]{1, 4});//32
-        add(new int[]{1, 4});
-        add(new int[]{1, 4});
-
-        add(new int[]{1, 2});//35
-        add(new int[]{1, 2});
-        add(new int[]{1, 2});
-
-        add(new int[]{2, 3});//38
-        add(new int[]{2, 3});
-        add(new int[]{2, 3});
-
-        add(new int[]{3, 4});//41
-        add(new int[]{3, 4});
-        add(new int[]{3, 4});
-
-    }};
-
-    private static final List<int[]> testEdges = new ArrayList<int[]>(20) {
+    private static final List<int[]> testCube = new ArrayList<int[]>(20) {
         {
             add(new int[]{1, 5, 4});//0
             add(new int[]{1, 5});
@@ -128,61 +53,17 @@ public class MainProcessorSetsCount implements MainProcessor {
     };
 
 
-    private static final List<int[][]> testEdgesIndexes = new ArrayList<int[][]>(12) {
-        {
-            add(new int[][]{{1}, {0, 1, 2}});
-            add(new int[][]{{5}, {0, 1, 2}});
-
-            add(new int[][]{{2}, {2, 3, 4}});
-            add(new int[][]{{5}, {2, 3, 4}});
 
 
-            add(new int[][]{{3}, {4, 5, 6}});
-            add(new int[][]{{5}, {4, 5, 6}});
 
-            add(new int[][]{{4}, {6, 7, 0}});
-            add(new int[][]{{5}, {6, 7, 0}});
-
-        }
-    };
-
-
-  /*  private static final List<int[]> testSet = new ArrayList<int[]>(10) {
-        {
-            add(new int[]{1, 5});
-            add(new int[]{1, 2, 5});
-            add(new int[]{2, 5});
-            add(new int[]{8, 9});
-        }
-    };*/
-
-
-    private static final List<int[]> edgesIndexes = new ArrayList<int[]>(12) {
-        {
-            add(new int[]{0, 1, 2, 3, 4});
-            add(new int[]{4, 5, 6, 7, 8});
-            add(new int[]{8, 9, 10, 11, 12});
-            add(new int[]{12, 13, 14, 15, 0});
-
-            add(new int[]{16, 17, 18, 19, 20});
-            add(new int[]{20, 21, 22, 23, 24});
-            add(new int[]{24, 25, 26, 27, 28});
-            add(new int[]{28, 29, 30, 31, 16});
-
-            add(new int[]{0, 32, 33, 34, 16});
-            add(new int[]{4, 35, 36, 37, 20});
-            add(new int[]{8, 38, 39, 40, 24});
-            add(new int[]{12, 41, 42, 43, 28});
-        }
-    };
 
 
     @Override
     public void letsRoll() {
 
 
-        //total number of combinations
-        long count = combinationsCount(testEdges);
+        //$total number of combinations
+        long count = combinationsCount(testCube);
 
         log.info("count:" + count);
 
@@ -196,14 +77,14 @@ public class MainProcessorSetsCount implements MainProcessor {
 
 
         CartesianProductFinderLight cfl = CartesianProductFinderLight.builder()
-                .input(testEdges)
+                .input(testCube)
                 .task(ints -> {
-                    if (check(ints)) {
+                    if (check(ints,testEdgesRules)) {
                         good.incrementAndGet();
-                        log.info(Arrays.stream(ints).boxed().map(String::valueOf).collect(Collectors.joining(",")));
+                        //log.info(Arrays.stream(ints).boxed().map(String::valueOf).collect(Collectors.joining(",")));
                     } else {
                         bad.incrementAndGet();
-                        log.info(Arrays.stream(ints).boxed().map(String::valueOf).collect(Collectors.joining(",")) + " *");
+                        //log.info(Arrays.stream(ints).boxed().map(String::valueOf).collect(Collectors.joining(",")) + " *");
                     }
                 })
                 .build();
@@ -212,87 +93,103 @@ public class MainProcessorSetsCount implements MainProcessor {
 
         log.info("good:" + good.toString());
         log.info("bad:" + bad.toString());
-        log.info("bad more:" + flatEdgeCombinationsCount(testEdges, testEdgesIndexes));
 
 
-        List<int[]> collect = IntStream.range(0, testEdges.size()).mapToObj(i -> (i < 8) ? new int[]{5} : testEdges.get(i)).collect(Collectors.toList());
-        log.info("5 5 5 5:" + combinationsCount(collect));
+        newApproach();
 
-        List<String> combinations = combinations(collect).collect(Collectors.toList());
-
-        List<int[]> collect1 = IntStream.range(0, testEdges.size()).mapToObj(i -> (i < 7) ? new int[]{5} : testEdges.get(i)).collect(Collectors.toList());
-        log.info("5 5 5 x:" + combinationsCount(collect1));
-
-        List<String> combinations1 = combinations(collect1).collect(Collectors.toList());
-
-        List<int[]> collect2 = IntStream.range(0, testEdges.size()).mapToObj(i -> (i < 5) ? new int[]{5} : testEdges.get(i)).collect(Collectors.toList());
-        log.info("5 5 x x:" + combinationsCount(collect2));
-
-        List<int[]> collect22 = IntStream.range(0, testEdges.size()).mapToObj(i -> (i < 7 && i>1) ? new int[]{5} : testEdges.get(i)).collect(Collectors.toList());
-        log.info("x 5 5 x:" + combinationsCount(collect22));
-
-        List<String> combinations2 = combinations(collect2).collect(Collectors.toList());
-
-        List<int[]> collect3 = IntStream.range(0, testEdges.size()).mapToObj(i -> (i < 3) ? new int[]{5} : testEdges.get(i)).collect(Collectors.toList());
-        log.info("5 x x x:" + combinationsCount(collect3));
-
-        List<String> combinations3 = combinations(collect3).collect(Collectors.toList());
-
-
-        boolean b1 = CollectionUtils.containsAll(combinations1, combinations);
-
-        boolean b2 = CollectionUtils.containsAll(combinations2, combinations1);
-        boolean b3 = CollectionUtils.containsAll(combinations3, combinations2);
+    }
 
 
 
-        /*String c = cpf.combinations().map(ints -> Arrays.stream(ints)
-                .boxed().map(String::valueOf)
-                .collect(Collectors.joining("-")))
-                //.filter(s -> !s.startsWith("5-5-5-5-5"))
-                .collect(Collectors.joining("\n"));*/
+    private void newApproach() {
 
-        log.info("\n");
+        addOrSubtract = true;
+        oneCalculationRound(testEdgesRules);
 
-       /* cpf.combinations(ints -> {
-            log.info(Arrays.stream(ints).boxed().map(String::valueOf).collect(Collectors.joining(",")));
-        });*/
-
-        //List<int[]> combinations = cpf.combinations().collect(Collectors.toList());
-
-
-        //4+4+4+4
-
-       /* cpf.combinations()
-                //.filter(ints -> !check(ints))
-                .forEach(ints -> {
-                    log.info(Arrays.stream(ints).boxed().map(String::valueOf).collect(Collectors.joining(",")));
-                });*/
-
-        //.count();
-
-
-        //long combinations = cpf.combinations();
-
-        //log.info("count:" + cpf.combinations().count());
+        log.info("$total:" + $total);
 
 
     }
 
 
-    private boolean check(int[] arr) {
 
-        if (arr[0] == arr[1] && arr[2] == arr[1])
-            return false;
+    boolean addOrSubtract = true;//add
 
-        if (arr[2] == arr[3] && arr[4] == arr[3])
-            return false;
+    private void oneCalculationRound(List<CubeRule> rules) {
 
-        if (arr[4] == arr[5] && arr[6] == arr[5])
-            return false;
+        List<CubeRule> newRules = new ArrayList<>();
 
-        if (arr[6] == arr[7] && arr[0] == arr[7])
-            return false;
+        for (int i = 0; i < rules.size(); i++) {
+            CubeRule cubeRule = rules.get(i);
+
+            long comb = countCombinationsWithRules(cubeRule);
+
+            if (addOrSubtract)
+                $total = $total + comb;
+            else
+                $total = $total - comb;
+
+            for (int u = 0; u < testEdgesRules.size(); u++) {
+                CubeRule cubeRule1 = testEdgesRules.get(u);
+
+                if (cubeRule.canExistTogether(cubeRule1) && !cubeRule.isEqual(cubeRule1)) {
+                    CubeRule newRule = new CubeRule(cubeRule, cubeRule1);
+
+                    if (!cubeRule.isEqual(newRule)) {
+
+                        if (newRules.stream().noneMatch(newRule::isEqual)) {
+                            newRules.add(newRule);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        addOrSubtract = !addOrSubtract;
+
+        if (newRules.size() == 0)
+            return;
+
+        oneCalculationRound(newRules);
+    }
+
+
+    private long countCombinationsWithRules(CubeRule rules) {
+        List<int[]> toCheck = new ArrayList<>(testCube);
+        for (CubeRule.Pixel pixel : rules.pixels) {
+            toCheck.set(pixel.cell, new int[]{pixel.color});
+        }
+        return combinationsCount(toCheck);
+    }
+
+
+    private static final List<CubeRule> testEdgesRules = new ArrayList<CubeRule>(8) {
+        {
+            add(new CubeRule().add(1, 0).add(1, 1).add(1, 2)); //1, new int[]{0, 1, 2}));
+            add(new CubeRule().add(5, 0).add(5, 1).add(5, 2));//5, new int[]{0, 1, 2}));
+
+            add(new CubeRule().add(2, 2).add(2, 3).add(2, 4)); //2, new int[]{2, 3, 4}));
+            add(new CubeRule().add(5, 2).add(5, 3).add(5, 4)); //5, new int[]{2, 3, 4}));
+
+            add(new CubeRule().add(5, 2).add(1, 1).add(2, 3));//vertex
+
+            add(new CubeRule().add(3, 4).add(3, 5).add(3, 6));//3, new int[]{4, 5, 6}));
+            add(new CubeRule().add(5, 4).add(5, 5).add(5, 6));// 5, new int[]{4, 5, 6}));
+
+            add(new CubeRule().add(4, 6).add(4, 7).add(4, 0));// 4, new int[]{6, 7, 0}));
+            add(new CubeRule().add(5, 6).add(5, 7).add(5, 0));//5, new int[]{6, 7, 0}));
+        }
+    };
+
+    private boolean check(int[] arr, List<CubeRule> rules) {
+        for (CubeRule rule : rules) {
+            boolean r = true;
+            for (CubeRule.Pixel pixel : rule.pixels) {
+                r = r & (arr[pixel.cell] == pixel.color);
+            }
+            if (r) return false;
+        }
 
         return true;
     }
@@ -303,32 +200,55 @@ public class MainProcessorSetsCount implements MainProcessor {
                 .reduce((left, right) -> left * right).orElse(0);
     }
 
-    private Stream<String> combinations(List<int[]> pixels) {
+    @Value
+    @NoArgsConstructor
+    static class CubeRule {
 
-        List<String> res = new ArrayList<>();
+        final List<Pixel> pixels = new ArrayList<>();
 
-        CartesianProductFinderLight.builder()
-                .input(pixels)
-                .task(ints -> {
-                    res.add(Arrays.stream(ints).boxed().map(String::valueOf).collect(Collectors.joining("-")));
-                })
-                .build().combinations();
-
-        return res.stream();
-    }
-
-
-    private long flatEdgeCombinationsCount(List<int[]> all, List<int[][]> edgesDescr) {
-
-        for (int[][] anEdgesDescr : edgesDescr) {
-            List<int[]> all1 = new ArrayList<>(all);
-            int[] ints = anEdgesDescr[1];
-            for (int anInt : ints) {
-                all1.set(anInt, anEdgesDescr[0]);
-            }
-            log.info("co: " + combinationsCount(all1));
+        boolean canExistTogether(CubeRule rule) {
+            return (rule.pixels.stream()
+                    .noneMatch(v -> this.pixels.stream().anyMatch(v1 -> (v1.cell == v.cell && v1.color != v.color))));
         }
-        return 0L;
-    }
 
+        boolean isEqual(CubeRule r) {
+
+            if (this.pixels.size() != r.pixels.size())
+                return false;
+
+            for (Pixel p : r.pixels) {
+                if (!this.pixels.contains(p))
+                    return false;
+            }
+            return true;
+        }
+
+
+        CubeRule(CubeRule a, CubeRule b) {
+            Set<Pixel> se = new HashSet<>();
+            se.addAll(a.pixels);
+            se.addAll(b.pixels);
+            pixels.addAll(se);
+        }
+
+
+        CubeRule add(int color, int cell) {
+            Pixel p = new Pixel(color, cell);
+            if (!pixels.contains(p))
+                pixels.add(p);
+            return this;
+        }
+
+
+        @Override
+        public String toString() {
+            return this.getPixels().stream().map(p -> "[" + p.color + "," + p.cell + "]").collect(Collectors.joining(","));
+        }
+
+        @Value
+        static class Pixel {
+            final int color;
+            final int cell;
+        }
+    }
 }

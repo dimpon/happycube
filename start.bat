@@ -8,8 +8,8 @@ rem java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data blue txt ./so
 
 rem java  -jar ./target/happycube-spring-boot.jar  SETS ./solutions/sets solution sol 
 
-java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data red txt ./solutions/red_uni solution sol false true
+rem java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data red txt ./solutions/red_uni solution sol false true
 
-rem java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data lilac txt ./solutions/lilac_nu solution sol false false
+java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data lilac txt ./solutions/lilac_nu solution sol false false
 
 rem java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data yellow txt ./solutions/yellow_uni solution sol false true
