@@ -11,7 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Objects;
 
 import static com.dimpon.happycube.HappyCube.Action.SETS;
+import static com.dimpon.happycube.HappyCube.Action.SETSCOUNT;
 import static com.dimpon.happycube.HappyCube.Action.SOLUTIONS;
+import static com.dimpon.happycube.pieces.SetsCountData.cubePixels;
+import static com.dimpon.happycube.pieces.SetsCountData.rules;
 
 @Slf4j
 public class HappyCube {
@@ -19,7 +22,8 @@ public class HappyCube {
 
     enum Action {
         SOLUTIONS,
-        SETS
+        SETS,
+        SETSCOUNT
     }
 
     public static void main(String[] args) {
@@ -33,12 +37,26 @@ public class HappyCube {
             solutions(args);
         } else if (args[0].equals(SETS.name())) {
             sets(args);
+        } else if (args[0].equals(SETSCOUNT.name())) {
+            setsCount(args);
         } else {
             usage();
         }
 
         log.info("Time:" + (System.currentTimeMillis() - start));
     }
+
+
+    private static void setsCount(String[] args) {
+
+        long combinations = MainProcessorSetsCount.builder()
+                .cubePixels(cubePixels)
+                .rules(rules)
+                .build().letsRoll();
+
+        log.info("Valid combination number is "+combinations);
+    }
+
 
     private static void solutions(String[] args) {
 
@@ -75,7 +93,7 @@ public class HappyCube {
                 .extension(args[6])
                 .build();
 
-        PiecesContainer container = new PiecesContainerSolutions();
+        PiecesContainer<int[]> container = new PiecesContainerSolutions();
         container.createInitialPieces(loader);
 
         MainProcessor processor = MainProcessorSolutions.builder()
@@ -111,7 +129,6 @@ public class HappyCube {
                 .build();
 
 
-
         PiecesContainer<int[][][]> container = new PiecesContainerSets();
         container.createInitialPieces(DataLoader.STUB);
 
@@ -121,7 +138,6 @@ public class HappyCube {
                 .build();
 
         processor.letsRoll();
-
 
 
     }

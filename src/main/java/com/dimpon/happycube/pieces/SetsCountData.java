@@ -17,8 +17,8 @@ public class SetsCountData {
     /*
      <blockquote><pre>
 
-     The class has vector (or array) structure describes pixels of the 3d cube edges.
-     Basically it is 2d cube representation.
+     The class has vector (or array)  describes pixels of the 3d cube edges.
+     Basically it is 2d flat representation.
      The 2d representation looks like:
 
                                       5
@@ -32,13 +32,13 @@ public class SetsCountData {
                                        6
 
      Every edge pixel can have 2 variants of color, vertex pixel can have 3 colors .
-     Figures in centers are colors of planes.
+     pixels in centers 3x3 have colors of planes.
      Based on this assumption I will find combinations.
 
      </pre></blockquote>
     */
 
-    private static final List<int[]> edges = new ArrayList<int[]>(16 + 16 + 12) {{
+    public static final List<int[]> cubePixels = new ArrayList<int[]>(16 + 16 + 12) {{
 
         add(new int[]{1, 4, 5});//0
         add(new int[]{1, 5});
@@ -91,6 +91,12 @@ public class SetsCountData {
         add(new int[]{3, 4});
 
     }};
+
+    public static final List<MainProcessorSetsCount.CubeRule> rules = new ArrayList<MainProcessorSetsCount.CubeRule>(8) {
+        {
+
+
+        }};
 
 
 
