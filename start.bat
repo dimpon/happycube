@@ -10,6 +10,8 @@ rem java  -jar ./target/happycube-spring-boot.jar  SETS ./solutions/sets solutio
 
 rem java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data red txt ./solutions/red_uni solution sol false true
 
-java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data lilac txt ./solutions/lilac_nu solution sol false false
+rem java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data lilac txt ./solutions/lilac_nu solution sol false false
 
 rem java  -jar ./target/happycube-spring-boot.jar SOLUTIONS ./data yellow txt ./solutions/yellow_uni solution sol false true
+
+java  -jar ./target/happycube-spring-boot.jar SETSCOUNT

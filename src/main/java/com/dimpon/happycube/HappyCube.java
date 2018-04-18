@@ -54,7 +54,11 @@ public class HappyCube {
                 .rules(rules)
                 .build().letsRoll();
 
-        log.info("Valid combination number is "+combinations);
+        //divide on 24 for detect unique. One cube can be rotated 24 times.
+
+        long l =  combinations / 24;
+
+        log.info("Valid combinations number is "+l);
     }
 
 

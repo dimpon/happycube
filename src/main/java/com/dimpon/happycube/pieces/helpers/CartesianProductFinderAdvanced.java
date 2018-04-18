@@ -11,9 +11,9 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
- * This class finds combinations of int[][] unlike {@link CartesianProductFinder} which operates with int codes
- * Into algorithm the early-checks are integrated for avoid infinite
- * loops.
+ * This class finds combinations of int[][] like {@link CartesianProductFinder} which operates with int codes
+ * Into algorithm the early-checks are integrated for speedup the search.
+ *
  */
 @Slf4j
 public class CartesianProductFinderAdvanced {

@@ -38,8 +38,11 @@ public class MainProcessorSetsCount {
         oneCalculationRound(rules);
         log.info("Bad combinations:" + $total);
 
-        //divide on 24 for detect unique. One cube can be rotated 24 times.
-        return (allCombinations - $total);
+        long rez = (allCombinations - $total);
+
+        log.info("Total - bad:" + rez);
+
+        return rez;
 
     }
 
