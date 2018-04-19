@@ -109,20 +109,6 @@ public class PiecesContainerSets implements PiecesContainer<int[][][]> {
             if (isGeneratedPieceOk(variant)) {
                 variantCounter++;
                 positions.add(variant);
-
-
-                /*IntStream.range(0, MATRIX_SIZE).mapToObj(value -> {
-                    return Arrays.stream(variant[value]).mapToObj(e -> (e == 0) ? " " : "x")
-                            .collect(Collectors.joining());
-                }).forEach(log::debug);
-
-                if(Arrays.deepEquals(romb,variant)){
-                    System.exit(1);
-                }*/
-
-
-
-
             }
         }
 

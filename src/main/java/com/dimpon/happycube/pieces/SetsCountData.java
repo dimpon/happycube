@@ -56,19 +56,6 @@ public class SetsCountData {
      just multiply the array's length in every pixel cell: e.g. 3 x 2 x 2 x 2 x 3 x 2 x 2 x 2 x 3.....
      The same approach is used for calculation the number of "bad" combinations.
 
-
-
-                                      5
-
-     [ 0] [1] [2] [3] [4] [5] [6] [7] [8] [9][10][11][12][13][14][15]
-     [32]            [35]            [38]            [41]
-   4 [33]     1      [36]      2     [39]      3     [42]     4
-     [34]            [37]            [40]            [43]
-     [16][17][18][19][20][21][22][23][24][25][26][27][28][29][30][31]
-
-                                       6
-
-
      </pre></blockquote>
     */
 
@@ -81,7 +68,34 @@ public class SetsCountData {
         {
 
             //vertexes. every vertex have 3 variants. Totally 24 rules
+/*
 
+                                      5
+
+ [15] [ 0] [1] [2] [3] [4] [5] [6] [7] [8] [9][10][11][12][13][14][15]
+     [32]            [35]            [38]            [41]
+   4 [33]     1      [36]      2     [39]      3     [42]     4
+     [34]            [37]            [40]            [43]
+ [31][16][17][18][19][20][21][22][23][24][25][26][27][28][29][30][31]
+
+                                     6
+            1
+      [0] [1] [2][3] [4]
+     [15]            [5]
+   4 [14]     5      [6] 2
+     [13]            [7]
+     [12][11][10][9] [8]
+              3
+
+
+              1
+     [16][17][18][19][20]
+     [31]            [21]
+   4 [30]     6      [22] 2
+     [29]            [23]
+     [28][27][26][25][24]
+              3
+ */
             //plane 4
             add(new MainProcessorSetsCount.CubeRule().add(3, 41).add(4, 12).add(5, 13));
             add(new MainProcessorSetsCount.CubeRule().add(5, 15).add(4, 0).add(1, 32));

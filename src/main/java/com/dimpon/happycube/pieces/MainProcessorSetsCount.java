@@ -31,16 +31,16 @@ public class MainProcessorSetsCount {
         //calculate total number of combinations
         long allCombinations = combinationsCount(cubePixels);
 
-        log.info("Total combinations:" + allCombinations);
+        log.info("Total combinations: " + allCombinations);
 
         //calculate "bad" combinations - with flat edges and hanging corner
         $plus = true;
         oneCalculationRound(rules);
-        log.info("Bad combinations:" + $total);
+        log.info("Bad combinations: " + $total);
 
         long rez = (allCombinations - $total);
 
-        log.info("Total - bad:" + rez);
+        log.info("(Total-Bad): " + rez);
 
         return rez;
 
@@ -61,13 +61,17 @@ public class MainProcessorSetsCount {
             else
                 $total = $total - comb;
 
+
+            log.trace((($plus)?"add:":"remove:") + cubeRule + " > " + comb);
+
+
             for (int u = 0; u < rules.size(); u++) {
                 CubeRule cubeRule1 = rules.get(u);
 
                 if (cubeRule.canExistTogether(cubeRule1) && !cubeRule.isEqual(cubeRule1)) {
                     CubeRule newRule = new CubeRule(cubeRule, cubeRule1);
 
-                    if (!cubeRule.isEqual(newRule)) {
+                    if (!cubeRule.isEqual(newRule) ) {
 
                         if (newRules.stream().noneMatch(newRule::isEqual)) {
                             newRules.add(newRule);
@@ -79,8 +83,16 @@ public class MainProcessorSetsCount {
 
         $plus = !$plus;
 
+        if ($plus && newRules.size() == 1)
+            return;
+
+        if (!$plus && newRules.size() == 0)
+            return;
+
+/*
         if (newRules.size() == 0)
             return;
+*/
 
         oneCalculationRound(newRules);
     }
@@ -137,6 +149,11 @@ public class MainProcessorSetsCount {
             if (!pixels.contains(p))
                 pixels.add(p);
             return this;
+        }
+
+        @Override
+        public String toString() {
+            return this.getPixels().stream().map(p -> "[" + p.color + "," + p.cell + "]").collect(Collectors.joining(","));
         }
 
 
