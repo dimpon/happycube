@@ -63,7 +63,6 @@ public class DataLoaderImpl implements DataLoader {
         @Cleanup Stream<Path> stream = Files.find(Paths.get(path), 1, matcherForFilesNames);
         stream.sorted(Comparator.naturalOrder())
                 .forEach(this::readOneFile);
-
     }
 
     /**

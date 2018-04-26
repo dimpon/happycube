@@ -1,13 +1,14 @@
 package com.dimpon.happycube.pieces;
 
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
+import com.dimpon.happycube.exception.HappyCubeException;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.RULES_CANNOT_EXIST_TOGETHER;
+import static com.dimpon.happycube.exception.HappyCubeException.ExceptionsType.WRONG_INITIAL_RULES;
 
 
 @Slf4j
@@ -27,53 +28,126 @@ public class MainProcessorSetsCount {
 
     public long letsRoll() {
 
+        //check
+        checkTheRules();
 
         //calculate total number of combinations
         long allCombinations = combinationsCount(cubePixels);
 
         log.info("Total combinations: " + allCombinations);
 
-        //calculate "bad" combinations - with flat edges and hanging corner
+        //calculate "bad" combinations - with flat edges and hanging corners
         $plus = true;
-        oneCalculationRound(rules);
+        oneCalculationRoundA(rules);
         log.info("Bad combinations: " + $total);
-
         long rez = (allCombinations - $total);
-
         log.info("(Total-Bad): " + rez);
-
         return rez;
+    }
 
+    private void checkTheRules() {
+        for (final CubeRule one : rules) {
+            for (final CubeRule two : rules) {
+
+                if (one.equals(two))
+                    continue;
+
+                if (one.contains(two)) {
+                    throw new HappyCubeException(WRONG_INITIAL_RULES, one, two);
+                }
+                if (two.contains(one)) {
+                    throw new HappyCubeException(WRONG_INITIAL_RULES, two, one);
+                }
+            }
+        }
     }
 
 
-    private void oneCalculationRound(List<CubeRule> cRules) {
+    private void oneCalculationRoundA(List<CubeRule> initRules) {
+
+        final Map<CubeRule, Integer> howManyEqualsRules = new HashMap<>();
+
+        List<CubeRule> rulesForTheNextRound = new ArrayList<>();
+
+
+        for (int i = 0; i < initRules.size(); i++) {
+
+            CubeRule firstRule = initRules.get(i);
+            long comb = countCombinationsWithRules(firstRule);
+
+            if ($plus) {
+                $total = $total + comb;
+                log.trace("plus:" + firstRule + " > " + comb);
+            } else {
+                $total = $total - comb;
+                log.trace("minus:" + firstRule + " > " + comb);
+            }
+
+
+            for (int u = 0; u < rules.size(); u++) {
+                CubeRule secondRule = rules.get(u);
+
+                if (firstRule.canExistTogether(secondRule)
+                        //&& !firstRule.equals(secondRule)
+                        && !firstRule.contains(secondRule)
+                        ) {
+                    CubeRule joinedRule = new CubeRule(firstRule, secondRule);
+
+                    howManyEqualsRules.compute(joinedRule, (s, integer) -> (integer == null) ? 1 : integer + 1);
+
+                    if (howManyEqualsRules.get(joinedRule) == initRules.size()) {
+                        log.debug("add:" + joinedRule);
+                        rulesForTheNextRound.add(joinedRule);
+                    }
+
+                    if (!rulesForTheNextRound.contains(joinedRule))
+                        rulesForTheNextRound.add(joinedRule);
+
+                }
+            }
+        }
+
+        log.trace("total:" + $total);
+        log.trace("rulesForTheNextRound:" + rulesForTheNextRound.size());
+        String yu = howManyEqualsRules.entrySet().stream().map(e -> e.getKey() + " > " + e.getValue()).collect(Collectors.joining("\n"));
+        log.trace("\n" + yu);
+
+        if (rulesForTheNextRound.size() == 0) {
+            return;
+        }
+
+        $plus = !$plus;
+
+        ArrayList<CubeRule> rulesForTheNextRoundLi = new ArrayList<>(rulesForTheNextRound);
+
+
+        oneCalculationRoundA(rulesForTheNextRoundLi);
+    }
+
+
+    private void oneCalculationRound(List<CubeRule> initRules) {
 
         List<CubeRule> newRules = new ArrayList<>();
 
-        for (int i = 0; i < cRules.size(); i++) {
-            CubeRule cubeRule = cRules.get(i);
+        for (int i = 0; i < initRules.size(); i++) {
+            CubeRule firstRule = initRules.get(i);
 
-            long comb = countCombinationsWithRules(cubeRule);
+            long comb = countCombinationsWithRules(firstRule);
 
             if ($plus)
                 $total = $total + comb;
             else
                 $total = $total - comb;
 
-
-            log.trace((($plus)?"add:":"remove:") + cubeRule + " > " + comb);
-
-
             for (int u = 0; u < rules.size(); u++) {
-                CubeRule cubeRule1 = rules.get(u);
+                CubeRule secondRule = rules.get(u);
 
-                if (cubeRule.canExistTogether(cubeRule1) && !cubeRule.isEqual(cubeRule1)) {
-                    CubeRule newRule = new CubeRule(cubeRule, cubeRule1);
+                if (firstRule.canExistTogether(secondRule) && !firstRule.equals(secondRule)) {
+                    CubeRule newRule = new CubeRule(firstRule, secondRule);
 
-                    if (!cubeRule.isEqual(newRule) ) {
+                    if (!firstRule.equals(newRule)) {
 
-                        if (newRules.stream().noneMatch(newRule::isEqual)) {
+                        if (newRules.stream().noneMatch(newRule::equals)) {
                             newRules.add(newRule);
                         }
                     }
@@ -83,20 +157,11 @@ public class MainProcessorSetsCount {
 
         $plus = !$plus;
 
-        if ($plus && newRules.size() == 1)
-            return;
-
-        if (!$plus && newRules.size() == 0)
-            return;
-
-/*
         if (newRules.size() == 0)
             return;
-*/
 
         oneCalculationRound(newRules);
     }
-
 
     private long countCombinationsWithRules(CubeRule rules) {
         List<int[]> toCheck = new ArrayList<>(cubePixels);
@@ -123,7 +188,7 @@ public class MainProcessorSetsCount {
                     .noneMatch(v -> this.pixels.stream().anyMatch(v1 -> (v1.cell == v.cell && v1.color != v.color))));
         }
 
-        boolean isEqual(CubeRule r) {
+        /*boolean isEqual(CubeRule r) {
 
             if (this.pixels.size() != r.pixels.size())
                 return false;
@@ -133,13 +198,28 @@ public class MainProcessorSetsCount {
                     return false;
             }
             return true;
+        }*/
+
+        boolean contains(CubeRule r) {
+            //this contains all rules from r and may be more.
+            for (Pixel p : r.pixels) {
+                if (!this.pixels.contains(p))
+                    return false;
+            }
+            return true;
         }
 
 
-        CubeRule(CubeRule a, CubeRule b) {
+        CubeRule(CubeRule... rules) {
             Set<Pixel> se = new HashSet<>();
-            se.addAll(a.pixels);
-            se.addAll(b.pixels);
+            for (CubeRule rule : rules) {
+                if ((se.stream()
+                        .noneMatch(v -> rule.pixels.stream().anyMatch(v1 -> (v1.cell == v.cell && v1.color != v.color))))) {
+                    se.addAll(rule.pixels);
+                } else {
+                    throw new HappyCubeException(RULES_CANNOT_EXIST_TOGETHER);
+                }
+            }
             pixels.addAll(se);
         }
 
@@ -156,6 +236,29 @@ public class MainProcessorSetsCount {
             return this.getPixels().stream().map(p -> "[" + p.color + "," + p.cell + "]").collect(Collectors.joining(","));
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+
+            CubeRule cubeRule = (CubeRule) o;
+
+            if (this.pixels.size() != cubeRule.pixels.size())
+                return false;
+
+            for (Pixel p : cubeRule.pixels) {
+                if (!this.pixels.contains(p))
+                    return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = super.hashCode();
+            return pixels.stream().mapToInt(p -> (int) p.color * p.cell).sum();
+        }
 
         @Value
         static class Pixel {
