@@ -62,6 +62,7 @@ public class MainProcessorSetsCount {
         }
     }
 
+    private boolean $firstTry = true;
 
     private void oneCalculationRoundA(List<CubeRule> initRules) {
 
@@ -84,39 +85,38 @@ public class MainProcessorSetsCount {
             }
 
 
-            for (int u = 0; u < rules.size(); u++) {
-                CubeRule secondRule = rules.get(u);
 
-                if (firstRule.canExistTogether(secondRule)
-                        //&& !firstRule.equals(secondRule)
-                        && !firstRule.contains(secondRule)
-                        ) {
-                    CubeRule joinedRule = new CubeRule(firstRule, secondRule);
+                for (int u = 0; u < rules.size(); u++) {
+                    CubeRule secondRule = rules.get(u);
 
-                    howManyEqualsRules.compute(joinedRule, (s, integer) -> (integer == null) ? 1 : integer + 1);
+                    if (firstRule.canExistTogether(secondRule)
+                            //&& !firstRule.equals(secondRule)
+                            && !firstRule.contains(secondRule)
+                            ) {
+                        CubeRule joinedRule = new CubeRule(firstRule, secondRule);
 
-                    if (howManyEqualsRules.get(joinedRule) == initRules.size()) {
-                        log.debug("add:" + joinedRule);
-                        rulesForTheNextRound.add(joinedRule);
+                        howManyEqualsRules.compute(joinedRule, (s, integer) -> (integer == null) ? 1 : integer + 1);
+
+                        if (!rulesForTheNextRound.contains(joinedRule))
+                            rulesForTheNextRound.add(joinedRule);
+
                     }
 
-                    if (!rulesForTheNextRound.contains(joinedRule))
-                        rulesForTheNextRound.add(joinedRule);
-
-                }
             }
         }
 
         log.trace("total:" + $total);
         log.trace("rulesForTheNextRound:" + rulesForTheNextRound.size());
-        String yu = howManyEqualsRules.entrySet().stream().map(e -> e.getKey() + " > " + e.getValue()).collect(Collectors.joining("\n"));
-        log.trace("\n" + yu);
+
+        log.trace("\n" + howManyEqualsRules.entrySet().stream().map(e -> e.getKey() + " #" + e.getValue()).collect(Collectors.joining("\n")));
 
         if (rulesForTheNextRound.size() == 0) {
             return;
         }
 
         $plus = !$plus;
+
+        $firstTry = false;
 
         ArrayList<CubeRule> rulesForTheNextRoundLi = new ArrayList<>(rulesForTheNextRound);
 
