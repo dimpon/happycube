@@ -1,6 +1,8 @@
 # Happy Cube solution finder
 
 [![Build Status](https://travis-ci.com/dimpon/happycube.svg?branch=master)](https://travis-ci.com/dimpon/happycube)
+[![Coverage Status](http://img.shields.io/coveralls/dimpon/happycube/master.svg?style=flat-square)](https://coveralls.io/r/dimpon/happycube?branch=master)
+
 
 #### Common Information
 It is a program for finding puzzle solution.
