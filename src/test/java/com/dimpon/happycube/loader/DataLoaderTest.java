@@ -39,7 +39,7 @@ public class DataLoaderTest {
 
 
         //Assert
-        Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingDeepEquals(p.getInitialData(), expectedResult));
+        Assert.assertFalse(MatrixUtils.isTwoArraysEqualUsingDeepEquals(p.getInitialData(), expectedResult));
         Assert.assertTrue(MatrixUtils.isTwoArraysEqualUsingEnumeration(p.getInitialData(), expectedResult));
 
     }
