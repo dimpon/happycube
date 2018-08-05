@@ -1,5 +1,7 @@
 # Happy Cube solution finder
 
+[![Build Status](https://travis-ci.com/dimpon/happycube.svg?branch=master)](https://travis-ci.com/dimpon/happycube)
+
 #### Common Information
 It is a program for finding puzzle solution.
 It uses the brute force for finding the combinations and positions of pieces. 
