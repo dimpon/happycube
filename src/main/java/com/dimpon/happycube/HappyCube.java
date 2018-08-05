@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 @Slf4j
 public class HappyCube {
 
+    brake it !
+
     public static void main(String[] args) {
 
         long start = System.currentTimeMillis();
