@@ -3,6 +3,7 @@ package com.dimpon.happycube.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Array;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
  * todo: now the most methods rotate all matrix, but central area 3x3 can be intact.
  */
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public final class MatrixUtils {
 
 

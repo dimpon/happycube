@@ -2,6 +2,7 @@ package com.dimpon.happycube.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Array;
@@ -14,7 +15,7 @@ import static com.dimpon.happycube.utils.MatrixUtils.MATRIX_SIZE;
  * Of course these methods can be placed in {@link MatrixUtils} but I decided that 200 lines is enough for one class
  */
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class Matrix3dUtils {
 
 

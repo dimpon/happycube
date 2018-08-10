@@ -2,6 +2,7 @@ package com.dimpon.happycube.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -11,7 +12,7 @@ import java.util.Map;
 import static com.dimpon.happycube.utils.Matrix3dUtils.*;
 
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class PerfectCubeCheckerUtils {
 
     public static boolean isCubePerfectByPlanes(List<int[][]> unfolded) {

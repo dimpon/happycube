@@ -19,6 +19,39 @@ import static com.dimpon.happycube.utils.MatrixUtils.*;
 @Slf4j
 public class Matrix3dUtilsTest {
 
+
+    @Test
+    public void testIsGeneratedPieceOk() throws Exception {
+
+        //Arrange
+        int[][] goodPiece = new int[][]{
+                {0, 1, 0, 1, 0},
+                {0, 1, 1, 1, 0},
+                {1, 1, 1, 1, 1},
+                {0, 1, 1, 1, 0},
+                {0, 0, 1, 0, 0}
+        };
+
+        int[][] badPiece = new int[][]{
+                {0, 1, 0, 1, 0},
+                {0, 1, 1, 1, 0},
+                {1, 1, 0, 1, 1},
+                {0, 1, 1, 1, 0},
+                {0, 0, 1, 0, 1}
+        };
+
+        //Act
+        boolean isOk1 = MatrixUtils.isGeneratedPieceOk(goodPiece);
+
+        //Act
+        boolean isOk2 = MatrixUtils.isGeneratedPieceOk(badPiece);
+
+        //Assert
+        Assert.assertTrue(isOk1);
+        Assert.assertFalse(isOk2);
+    }
+
+
     @Test
     public void testFoldTheCube() throws Exception {
 
@@ -30,7 +63,6 @@ public class Matrix3dUtilsTest {
         unfolded.add(frontPlane);
         unfolded.add(bottomPlane);
         unfolded.add(backPlane);
-
 
         int[][][] out = Matrix3dUtils.foldTheCube(unfolded);
 
