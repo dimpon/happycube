@@ -74,19 +74,23 @@ public class DataLoaderImpl implements DataLoader {
     @SneakyThrows(IOException.class)
     private void readOneFile(Path filename) {
 
-        int[][] matrix = Files.lines(filename)
-                .limit(MATRIX_SIZE)
-                .map(l -> l.chars().map((e) -> e != 32 ? 1 : 0).toArray())
-                .map(e -> Arrays.copyOf(e, MATRIX_SIZE))
-                .toArray(int[][]::new);
+        try (Stream<String> lines = Files.lines(filename)) {
 
-        if (!isCentralPartOk(matrix) || !isCornersOk(matrix)) {
-            throw new HappyCubeException(HappyCubeException.ExceptionsType.WRONG_INIT_DATA);
+            int[][] matrix = lines
+                    .limit(MATRIX_SIZE)
+                    .map(l -> l.chars().map((e) -> e != 32 ? 1 : 0).toArray())
+                    .map(e -> Arrays.copyOf(e, MATRIX_SIZE))
+                    .toArray(int[][]::new);
+
+
+            if (!isCentralPartOk(matrix) || !isCornersOk(matrix)) {
+                throw new HappyCubeException(HappyCubeException.ExceptionsType.WRONG_INIT_DATA);
+            }
+
+            log.info(Arrays.deepToString(matrix));
+            initialData.put(piecesCounter, matrix);
+            piecesCounter++;
         }
-
-        log.info(Arrays.deepToString(matrix));
-        initialData.put(piecesCounter, matrix);
-        piecesCounter++;
     }
 
 
