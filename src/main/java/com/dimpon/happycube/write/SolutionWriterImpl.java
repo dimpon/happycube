@@ -38,8 +38,6 @@ public class SolutionWriterImpl implements SolutionWriter {
 
     /**
      * {@inheritDoc}
-     * <p>
-     *
      */
     @Override
     @SneakyThrows(IOException.class)
