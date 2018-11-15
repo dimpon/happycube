@@ -86,7 +86,7 @@
 
     </dependencies>
 
-    <build>N
+    <build>
         <plugins>
 
             <plugin>
