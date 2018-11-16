@@ -1,8 +1,9 @@
 language: java
 jdk: oraclejdk8
-script: mvn clean install -DskipTests=true
-after_success:
-  - mvn clean test jacoco:report coveralls:report
+script: mvn clean package -DskipTests=true
+
+#after_success:
+#  - mvn clean test jacoco:report coveralls:report
 
 before_deploy:
   - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['

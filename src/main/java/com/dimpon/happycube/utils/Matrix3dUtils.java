@@ -1,7 +1,5 @@
 package com.dimpon.happycube.utils;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +19,7 @@ public class Matrix3dUtils {
 
     /**
      * Builds the cube (int[][][]) based on unfolded form.
-     * <p>
+     *
      * The sequence of plane surfaces:
      * <blockquote><pre>
      * 0 1 2
@@ -103,6 +101,7 @@ public class Matrix3dUtils {
      * </pre></blockquote>
      *
      * @param unfolded unfolded plane layout
+     * @param colors colors array
      * @return cube in 3d array
      */
     public static int[][][] foldColoredCube(List<int[][]> unfolded, int[] colors) {
@@ -117,9 +116,11 @@ public class Matrix3dUtils {
 
     /**
      * Rotate 3d cube 90 grad clockwise over Z axis
-     * <p>
+     *
+     *
      * top, bottom planes are't move
-     * facade > left, left > back, back > right, right > facade
+     * facade &gt; left, left &gt; back, back &gt; right, right &gt; facade
+     *
      *
      * @param in inout cube
      * @return rotated cube
@@ -136,9 +137,9 @@ public class Matrix3dUtils {
 
     /**
      * Rotate 3d cube 90 grad over Y axis
-     * <p>
+     *
      * right, left planes are't move
-     * top > facade, facade > bottom, bottom > back, back > top
+     * top &gt; facade, facade &gt; bottom, bottom &gt; back, back &gt; top
      *
      * @param in inout cube
      * @return rotated cube
@@ -177,6 +178,12 @@ public class Matrix3dUtils {
         return out;
     }
 
+    /**
+     * Mirror cube
+     *
+     * @param in initial cube
+     * @return mirror cube
+     */
     public static int[][][] mirrorCube(int[][][] in) {
         int[][][] out = (int[][][]) Array.newInstance(Integer.TYPE, MATRIX_SIZE, MATRIX_SIZE, MATRIX_SIZE);
 

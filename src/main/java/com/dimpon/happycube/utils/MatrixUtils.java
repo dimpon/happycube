@@ -140,6 +140,7 @@ public final class MatrixUtils {
     /**
      * Method checks whether central part 3x3 is filled
      *
+     * @param in array to check
      * @return true or false
      */
     public static boolean isCentralPartOk(int[][] in) {
@@ -157,6 +158,7 @@ public final class MatrixUtils {
     /**
      * Is generated piece meets basic requirements
      *
+     * @param in array to check
      * @return true or false
      */
     public static boolean isGeneratedPieceOk(int[][] in) {
@@ -178,6 +180,7 @@ public final class MatrixUtils {
      * Method checks whether corners are not hanging in air.
      * Might be used in Challenge #2
      *
+     * @param in array to check
      * @return true or false
      */
     public static boolean isCornersOk(int[][] in) {
@@ -204,6 +207,7 @@ public final class MatrixUtils {
      * Method checks whether piece has a flat side. Flat side is bad.
      * Might be used in Challenge #2
      *
+     * @param in array to check
      * @return true or false
      */
     public static boolean hasFlatSide(int[][] in) {
@@ -242,8 +246,6 @@ public final class MatrixUtils {
     The methods below are used for algorithm B, based on edges checking.
     It turned out that performance is worse.
      */
-
-
     private static int one(int a, int b, int c, int d) {
         return (a & ~b & ~c & ~d) | (~a & b & ~c & ~d) | (~a & ~b & c & ~d) | (~a & ~b & ~c & d);
     }
