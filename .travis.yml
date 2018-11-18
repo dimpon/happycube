@@ -6,7 +6,8 @@ jdk:
  #- openjdk9
 
 
-install: mvn clean verify -DskipTests=true
+install:
+ - mvn --settings .maven.xml install -DskipTests=true
 #script: "echo script && mvn clean verify"
 
 cache:
