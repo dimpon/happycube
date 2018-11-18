@@ -6,8 +6,8 @@ jdk:
  #- openjdk9
 
 
-install: "echo 'install' mvn install -DskipTests=true"
-script: "echo 'script' mvn clean verify"
+install: "echo install && mvn install -DskipTests=true"
+script: "echo script && mvn clean verify"
 
 cache:
   directories:
