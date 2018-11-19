@@ -6,5 +6,5 @@ jdk:
  #- openjdk9
 
 
-install: Smvn --settings .maven.xml install -DskipTests=true
+install: mvn --settings .maven.xml install -DskipTests=true
 #script: "echo script && mvn clean verify"
