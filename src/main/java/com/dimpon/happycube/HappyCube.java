@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class HappyCube {
-
+hjhj
 
     public static void main(String[] args) {
 
