@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 public class HappyCube {
 
 
+
+
     public static void main(String[] args) {
 
         long start = System.currentTimeMillis();
