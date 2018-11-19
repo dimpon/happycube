@@ -6,31 +6,5 @@ jdk:
  #- openjdk9
 
 
-install:
- - mvn --settings .maven.xml install -DskipTests=true
+install: Smvn --settings .maven.xml install -DskipTests=true
 #script: "echo script && mvn clean verify"
-
-cache:
-  directories:
-    - $HOME/.m2
-
-#after_success:
-#  - mvn clean test jacoco:report coveralls:report
-
-before_deploy:
-  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
-  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
-
-deploy:
-  provider: releases
-    api_key:
-      secure: ff64d8c0aab1cdaa36ba2e4160cee977aa17d151
-    file:
-      - target/happycube.jar
-      - target/happycube-spring-boot.jar
-
-    skip_cleanup: true
-    on:
-      repo: dimpon/happycube
-      tags: true
-    name: $project_version
