@@ -13,17 +13,5 @@ before_deploy:
  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 
-deploy:
-  provider: releases
-    api_key: "$GITHUB_OAUTH_TOKEN"
 
-    file:
-      - happycube/target/happycube.jar
-      - happycube/target/happycube-spring-boot.jar
 
-    skip_cleanup: true
-    on:
-      repo: dimpon/happycube
-      tags: true
-      all_branches: true
-    name: $project_version
