@@ -3,7 +3,7 @@
     <groupId>com.dimpon.testtask</groupId>
     <artifactId>happy-cube</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.5</version>
     <name>happy-cube</name>
 
 
@@ -31,7 +31,7 @@
         <connection>scm:git:https://github.com/dimpon/happycube.git</connection>
         <developerConnection>scm:git:https://github.com/dimpon/happycube.git</developerConnection>
         <url>https://github.com/dimpon/happycube</url>
-      <tag>HEAD</tag>
+      <tag>v0.0.5</tag>
   </scm>
 
     <distributionManagement>
