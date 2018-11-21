@@ -34,6 +34,10 @@
       <tag>HEAD</tag>
   </scm>
 
+    <distributionManagement>
+
+    </distributionManagement>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

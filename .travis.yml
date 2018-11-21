@@ -14,10 +14,6 @@ before_deploy:
  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 
 
-## Get the project version
-before_deploy:
-    - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
-    - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 
 ## Create release in GitHub
 deploy:
@@ -26,8 +22,8 @@ deploy:
     overwrite: true
 
     file:
-        - happycube/target/happycube.jar
-        - happycube/target/happycube-spring-boot.jar
+        - target/happycube.jar
+        - target/happycube-spring-boot.jar
 
     skip_cleanup: true
     on:
