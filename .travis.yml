@@ -5,6 +5,10 @@ jdk:
  #- openjdk8
  #- openjdk9
 
+#integration with codecov, call webhook
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 
 script: mvn --settings .maven.xml install -DskipTests=true
 #script: "echo script && mvn clean verify"
@@ -16,20 +20,20 @@ before_deploy:
 
 
 ## Create release in GitHub
-deploy:
-    provider: releases
-    api_key: $GITHUB_OAUTH_TOKEN
-    overwrite: true
+#deploy:
+#    provider: releases
+#    api_key: $GITHUB_OAUTH_TOKEN
+#    overwrite: true
 
-    file:
-        - target/happycube.jar
-        - target/happycube-spring-boot.jar
+#    file:
+#        - target/happycube.jar
+#        - target/happycube-spring-boot.jar
 
-    skip_cleanup: true
-    on:
-        repo: dimpon/happycube
-        tags: true
-    name: $project_version
+#    skip_cleanup: true
+#    on:
+#        repo: dimpon/happycube
+#        tags: true
+#    name: $project_version
 
 cache:
     directories:

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/dimpon/happycube.svg?branch=master)](https://travis-ci.com/dimpon/happycube)
 [![Coverage Status](http://img.shields.io/coveralls/dimpon/happycube/master.svg?style=flat-square)](https://coveralls.io/r/dimpon/happycube?branch=master)
-
+[![codecov](https://codecov.io/gh/dimpon/happycube/branch/master/graph/badge.svg)](https://codecov.io/gh/dimpon/happycube)
 
 #### Common Information
 It is a program for finding puzzle solution.
