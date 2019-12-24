@@ -1,7 +1,8 @@
+os: linux
 language: java
 jdk:
- - oraclejdk8
- #- oraclejdk9
+  - openjdk8
+  #- oraclejdk9
  #- openjdk8
  #- openjdk9
 
@@ -10,12 +11,15 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 
-script: mvn --settings .maven.xml install -DskipTests=true
-#script: "echo script && mvn clean verify"
+#skipping install
+install: echo "install..."
 
-before_deploy:
- - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
- - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
+#that's what is run for every commit
+script: mvn clean test jacoco:report coveralls:report -e -B
+
+#before_deploy:
+# - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+# - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 
 
 
